@@ -9,5 +9,5 @@ export default async function Home() {
 	const serverInfo = await admin.serverInfo();
 	console.log(serverInfo);
 	console.log(result);
-	return <>mongonaut</>;
+	return <></>;
 }
