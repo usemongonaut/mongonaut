@@ -8,7 +8,7 @@
 		"start": "next start",
 		"lint": "next lint",
 		"test:format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss}\"",
-		"format": "yarn prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss}\""
+		"format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss}\""
 	},
 	"dependencies": {
 		"@radix-ui/react-collapsible": "^1.1.2",
