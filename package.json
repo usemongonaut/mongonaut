@@ -7,8 +7,8 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"test:format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss,md,mdx}\"",
-		"format": "yarn prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md,mdx}\""
+		"test:format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss}\"",
+		"format": "yarn prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss}\""
 	},
 	"dependencies": {
 		"class-variance-authority": "^0.7.1",
