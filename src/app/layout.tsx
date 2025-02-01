@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 	title: 'Mongonaut',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
@@ -57,7 +57,7 @@ export default function RootLayout({
 		<html lang="en" className="w-full h-full">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full`}>
 				<SidebarProvider>
-					<AppSidebar databases={databases} totalSize={409443436} space={4094434360} />
+					<AppSidebar databases={databases} totalSize={409443436} />
 					<SidebarInset>
 						<main>{children}</main>
 					</SidebarInset>

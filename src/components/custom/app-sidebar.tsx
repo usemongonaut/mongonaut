@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
+import { Document } from 'mongodb';
 import {
 	Sidebar,
 	SidebarContent,
@@ -22,16 +23,15 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Input } from '@/components/ui/input';
 import { SettingsButton } from '@/components/custom/settings-button';
 import { Database } from '@/lib/types/mongo';
-import { Progress } from '@/components/ui/progress';
 
 export function AppSidebar({
 	databases,
-	space,
 	totalSize,
+	serverInfo,
 }: {
 	databases: Database[];
 	totalSize: number;
-	space: number;
+	serverInfo?: Document;
 }) {
 	const [search, setSearch] = useState('');
 
@@ -79,12 +79,26 @@ export function AppSidebar({
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter>
-				<div className="grid gap-2 px-2">
-					<Progress value={(totalSize / space) * 100} className="w-full" />
-					<p className="text-muted-foreground text-xs">
-						{prettyBytes(totalSize)} of {prettyBytes(space)} used
-					</p>
-				</div>
+				{serverInfo && (
+					<div className="grid gap-2 px-2 border-b pb-3">
+						<div className={'flex justify-between gap-2 text-xs'}>
+							<div className="text-muted-foreground">
+								<p>Used Space</p>
+								<p>Mongo Version</p>
+								<p>Environment</p>
+								<p>System Info</p>
+								<p>Max. Bson Size</p>
+							</div>
+							<div className="truncate">
+								<p>{prettyBytes(totalSize)}</p>
+								<p>{serverInfo['version']}</p>
+								<p>{serverInfo['buildEnvironment']['distmod']}</p>
+								<p>{serverInfo['sysInfo']}</p>
+								<p>{prettyBytes(serverInfo['maxBsonObjectSize'])}</p>
+							</div>
+						</div>
+					</div>
+				)}
 				<div className={'flex justify-between'}>
 					<Link
 						href="https://github.com/usemongonaut/mongonaut"
@@ -99,7 +113,7 @@ export function AppSidebar({
 							height={30}
 						/>
 					</Link>
-					<div className="my-auto">
+					<div className="my-auto flex">
 						<SettingsButton />
 					</div>
 				</div>
