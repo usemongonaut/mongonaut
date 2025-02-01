@@ -27,9 +27,6 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	// TODO: Get real data
-	const databases: Database[] = [];
-
 	return (
 		<html lang="en" className="w-full h-full">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full`}>
@@ -40,7 +37,7 @@ export default async function RootLayout({
 						} as React.CSSProperties
 					}
 				>
-					<AppSidebar databases={databases} totalSize={409443436} />
+					<AppSidebar databases={[]} totalSize={1000} />
 					<SidebarInset>
 						<main>{children}</main>
 					</SidebarInset>
