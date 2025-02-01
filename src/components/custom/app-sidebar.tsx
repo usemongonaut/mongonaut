@@ -1,5 +1,6 @@
-import { ChevronRightIcon, DatabaseIcon, SettingsIcon, TableIcon } from 'lucide-react';
+import { ChevronRightIcon, DatabaseIcon, SearchIcon, SettingsIcon, TableIcon } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
 	Sidebar,
 	SidebarContent,
@@ -14,12 +15,21 @@ import {
 	SidebarMenuSub,
 } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { SettingsButton } from '@/components/custom/settings-button';
 
 export async function AppSidebar() {
 	return (
 		<Sidebar>
-			<SidebarHeader />
+			<SidebarHeader>
+				<div className="relative mt-4">
+					<Input placeholder="Search for anything..." className="pl-8" />
+
+					<div className="absolute p-2.5 left-0 top-0">
+						<SearchIcon size={14} className="text-muted-foreground" />
+					</div>
+				</div>
+			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>
 					<SidebarGroupLabel>Databases</SidebarGroupLabel>
@@ -39,16 +49,16 @@ export async function AppSidebar() {
 			</SidebarContent>
 			<SidebarFooter>
 				<div className={'flex justify-between'}>
-					<Image
-						src="images/logo.svg"
-						alt="Mongonaut"
-						className="dark:invert"
-						width={30}
-						height={30}
-					/>
-					<Button size={'icon'} variant={'ghost'}>
-						<SettingsIcon />
-					</Button>
+					<Link href="https://github.com/usemongonaut/mongonaut" target="_blank">
+						<Image
+							src="images/logo.svg"
+							alt="Mongonaut"
+							className="dark:invert"
+							width={30}
+							height={30}
+						/>
+					</Link>
+					<SettingsButton />
 				</div>
 			</SidebarFooter>
 		</Sidebar>
