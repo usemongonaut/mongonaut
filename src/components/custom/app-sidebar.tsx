@@ -3,7 +3,7 @@
 import { ChevronRightIcon, DatabaseIcon, SearchIcon, TableIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
 import {
 	Sidebar,
