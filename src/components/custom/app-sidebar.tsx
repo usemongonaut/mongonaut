@@ -101,8 +101,10 @@ export function CollapsibleDatabaseSidebarItem({
 	search: string;
 }) {
 	const filteredCollections = (database: Database) => {
-		return database.collections.filter(collection =>
-			collection.name.toLowerCase().includes(search.trim().toLowerCase()),
+		return database.collections.filter(
+			collection =>
+				collection.name.toLowerCase().includes(search.trim().toLowerCase()) ||
+				database.name.toLowerCase().includes(search.trim().toLowerCase()),
 		);
 	};
 
