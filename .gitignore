@@ -43,6 +43,7 @@ next-env.d.ts
 # idea configuration
 .idea/material_theme_project_new.xml
 .idea/workspace.xml
+.idea/shelf
 
 # npm package-lock because we use bun
 package-lock.json
