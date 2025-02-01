@@ -7,7 +7,7 @@ export default async function Home() {
 	const admin = mongoClient.db().admin();
 	const result = await admin.listDatabases();
 	const serverInfo = await admin.serverInfo();
-	console.log(serverInfo);
-	console.log(result);
+	console.log('sI', serverInfo);
+	console.log('r', result);
 	return <></>;
 }

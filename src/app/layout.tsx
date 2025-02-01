@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/custom/app-sidebar';
+import { Database } from '@/lib/types/mongo';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -24,11 +25,39 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	// TODO: Get real data
+	const databases: Database[] = [
+		{
+			name: 'test',
+			totalSize: 140960,
+			collections: [
+				{
+					name: 'test',
+					totalSize: 40960,
+				},
+			],
+		},
+		{
+			name: 'minecraft',
+			totalSize: 240960,
+			collections: [
+				{
+					name: 'players',
+					totalSize: 40960,
+				},
+				{
+					name: 'gamers',
+					totalSize: 4094434360,
+				},
+			],
+		},
+	];
+
 	return (
 		<html lang="en" className="w-full h-full">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full`}>
 				<SidebarProvider>
-					<AppSidebar />
+					<AppSidebar databases={databases} totalSize={409443436} space={4094434360} />
 					<SidebarInset>
 						<main>{children}</main>
 					</SidebarInset>
