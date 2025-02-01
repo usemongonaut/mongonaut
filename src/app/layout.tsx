@@ -29,20 +29,25 @@ export default function RootLayout({
 	const databases: Database[] = [
 		{
 			name: 'test',
+			totalSize: 140960,
 			collections: [
 				{
 					name: 'test',
+					totalSize: 40960,
 				},
 			],
 		},
 		{
 			name: 'minecraft',
+			totalSize: 240960,
 			collections: [
 				{
 					name: 'players',
+					totalSize: 40960,
 				},
 				{
 					name: 'gamers',
+					totalSize: 4094434360,
 				},
 			],
 		},

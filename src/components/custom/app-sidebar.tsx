@@ -4,6 +4,7 @@ import { ChevronRightIcon, DatabaseIcon, SearchIcon, TableIcon } from 'lucide-re
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import prettyBytes from 'next/dist/lib/pretty-bytes';
 import {
 	Sidebar,
 	SidebarContent,
@@ -113,6 +114,10 @@ export function CollapsibleDatabaseSidebarItem({
 						<ChevronRightIcon className="transition-transform" />
 						<DatabaseIcon />
 						{database.name}
+
+						<div className="ml-auto text-muted-foreground text-xs">
+							{prettyBytes(database.totalSize)}
+						</div>
 					</SidebarMenuButton>
 				</CollapsibleTrigger>
 				<CollapsibleContent>
@@ -121,6 +126,10 @@ export function CollapsibleDatabaseSidebarItem({
 							<SidebarMenuButton key={index} className="data-[active=true]:bg-transparent">
 								<TableIcon />
 								{collection.name}
+
+								<div className="ml-auto text-muted-foreground text-xs">
+									{prettyBytes(collection.totalSize)}
+								</div>
 							</SidebarMenuButton>
 						))}
 					</SidebarMenuSub>
