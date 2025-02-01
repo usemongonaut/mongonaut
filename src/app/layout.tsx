@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
 	title: 'Mongonaut',
+	description: 'Mongonaut is a lightweight easy-to-use MongoDB UI for the web.',
 };
 
 export default async function RootLayout({
