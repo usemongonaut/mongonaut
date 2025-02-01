@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const mongoClient = new MongoClient('mongodb://localhost:27017');
+const mongoClient = new MongoClient(process.env.MONGODB_URL ?? 'mongodb://localhost:27017');
 
 export default async function Home() {
 	await mongoClient.connect();
