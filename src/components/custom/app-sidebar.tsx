@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronRightIcon, DatabaseIcon, SearchIcon, TableIcon } from 'lucide-react';
+import { ChevronRightIcon, DatabaseIcon, SearchIcon, SlashIcon, TableIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -22,8 +22,17 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Input } from '@/components/ui/input';
 import { SettingsButton } from '@/components/custom/settings-button';
 import { Database } from '@/lib/types/mongo';
+import { Progress } from '@/components/ui/progress';
 
-export function AppSidebar({ databases }: { databases: Database[] }) {
+export function AppSidebar({
+	databases,
+	space,
+	totalSize,
+}: {
+	databases: Database[];
+	totalSize: number;
+	space: number;
+}) {
 	const [search, setSearch] = useState('');
 
 	const filteredDatabases = databases.filter(database => {
@@ -70,6 +79,12 @@ export function AppSidebar({ databases }: { databases: Database[] }) {
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter>
+				<div className="grid gap-2 px-2">
+					<Progress value={(totalSize / space) * 100} className="w-full" />
+					<p className="text-muted-foreground text-xs">
+						{prettyBytes(totalSize)} of {prettyBytes(space)} used
+					</p>
+				</div>
 				<div className={'flex justify-between'}>
 					<Link
 						href="https://github.com/usemongonaut/mongonaut"
