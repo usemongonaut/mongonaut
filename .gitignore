@@ -44,6 +44,7 @@ next-env.d.ts
 .idea/material_theme_project_new.xml
 .idea/workspace.xml
 .idea/shelf
+.idea/dictionaries
 
 # npm package-lock because we use bun
 package-lock.json
