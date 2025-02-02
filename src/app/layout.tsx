@@ -39,7 +39,7 @@ export default async function RootLayout({
 				>
 					<AppSidebar databases={[]} totalSize={1000} />
 					<SidebarInset>
-						<main>{children}</main>
+						<main className="min-h-screen w-full">{children}</main>
 					</SidebarInset>
 				</SidebarProvider>
 			</body>
