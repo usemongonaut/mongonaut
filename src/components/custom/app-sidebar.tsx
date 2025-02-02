@@ -105,7 +105,7 @@ export function AppSidebar({
 						className="my-auto"
 					>
 						<Image
-							src="images/logo.svg"
+							src="/images/logo.svg"
 							alt="Mongonaut"
 							className="dark:invert"
 							width={30}
