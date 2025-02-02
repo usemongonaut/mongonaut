@@ -5,7 +5,11 @@ import './globals.css';
 import React from 'react';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/custom/app-sidebar';
-import { collectSidebarDatabaseInformation, listDatabases } from '@/actions/databaseOperation';
+import {
+	collectSidebarDatabaseInformation,
+	getServerInfo,
+	listDatabases,
+} from '@/actions/databaseOperation';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -27,6 +31,7 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const serverInfo = await getServerInfo();
 	const { totalSize } = await listDatabases();
 	const collectedDbInfo = await collectSidebarDatabaseInformation();
 
@@ -40,7 +45,7 @@ export default async function RootLayout({
 						} as React.CSSProperties
 					}
 				>
-					<AppSidebar databases={collectedDbInfo} totalSize={totalSize} />
+					<AppSidebar databases={collectedDbInfo} totalSize={totalSize} serverInfo={serverInfo} />
 					<SidebarInset>
 						<main className="min-h-screen w-full">{children}</main>
 					</SidebarInset>

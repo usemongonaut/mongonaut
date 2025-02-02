@@ -86,14 +86,12 @@ export function AppSidebar({
 								{totalSize && <p>Used Space</p>}
 								<p>Mongo Version</p>
 								<p>Environment</p>
-								<p>System Info</p>
 								<p>Max. Bson Size</p>
 							</div>
 							<div className="truncate">
 								{totalSize && <p>{prettyBytes(totalSize)}</p>}
 								<p>{serverInfo['version']}</p>
 								<p>{serverInfo['buildEnvironment']['distmod']}</p>
-								<p>{serverInfo['sysInfo']}</p>
 								<p>{prettyBytes(serverInfo['maxBsonObjectSize'])}</p>
 							</div>
 						</div>
