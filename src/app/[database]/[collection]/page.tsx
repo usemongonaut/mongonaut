@@ -56,10 +56,10 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
 				<div className="lg:col-span-2 border rounded-lg">
-					<ClientJsonEditor className="w-full h-full " data={testData} />
+					<ClientJsonEditor className="w-full h-full" data={testData} />
 				</div>
 				<div>
-					<div className="border rounded-lg p-4 grid gap-2">
+					<div className="border rounded-lg p-4 grid gap-2 sticky top-4">
 						<p className="text-lg font-semibold">Collection information</p>
 
 						<div className="flex justify-between text-sm">
