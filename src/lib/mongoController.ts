@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import { CollectionStats } from '@/lib/types/mongo';
 
 export class MongoController {
 	readonly client: MongoClient;
@@ -20,9 +21,12 @@ export class MongoController {
 		return this.client.db(name).listCollections();
 	}
 
-	public async getCollectionStats(dbName: string, collectionName: string) {
+	public async getCollectionStats(
+		dbName: string,
+		collectionName: string,
+	): Promise<CollectionStats> {
 		await this.client.connect();
 		const db = this.client.db(dbName);
-		return db.command({ collStats: collectionName });
+		return (await db.command({ collStats: collectionName })) as CollectionStats;
 	}
 }

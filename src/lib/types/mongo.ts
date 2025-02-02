@@ -9,3 +9,10 @@ export interface Database {
 	collections: Collection[];
 	totalSize: number;
 }
+
+export interface CollectionStats {
+	size: number;
+	count: number;
+	storageSize: number;
+	avgObjSize: number;
+}
