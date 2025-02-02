@@ -30,7 +30,7 @@ export function AppSidebar({
 	serverInfo,
 }: {
 	databases: Database[];
-	totalSize: number;
+	totalSize?: number;
 	serverInfo?: Document;
 }) {
 	const [search, setSearch] = useState('');
@@ -71,7 +71,7 @@ export function AppSidebar({
 								))
 							) : (
 								<SidebarMenuItem className="border border-dashed px-2 py-4 rounded">
-									<p className="text-muted-foreground text-xs">No databases or collections found</p>
+									<p className="text-muted-foreground text-xs">No databases found</p>
 								</SidebarMenuItem>
 							)}
 						</SidebarMenu>
@@ -83,14 +83,14 @@ export function AppSidebar({
 					<div className="grid gap-2 px-2 border-b pb-3">
 						<div className={'flex justify-between gap-2 text-xs'}>
 							<div className="text-muted-foreground">
-								<p>Used Space</p>
+								{totalSize && <p>Used Space</p>}
 								<p>Mongo Version</p>
 								<p>Environment</p>
 								<p>System Info</p>
 								<p>Max. Bson Size</p>
 							</div>
 							<div className="truncate">
-								<p>{prettyBytes(totalSize)}</p>
+								{totalSize && <p>{prettyBytes(totalSize)}</p>}
 								<p>{serverInfo['version']}</p>
 								<p>{serverInfo['buildEnvironment']['distmod']}</p>
 								<p>{serverInfo['sysInfo']}</p>
@@ -156,8 +156,7 @@ export function CollapsibleDatabaseSidebarItem({
 						{filteredCollections(database).map((collection, index) => (
 							<SidebarMenuButton key={index} className="data-[active=true]:bg-transparent">
 								<TableIcon />
-								{collection.name}
-
+								{collection.name} ({collection.documentCount})
 								<div className="ml-auto text-muted-foreground text-xs">
 									{prettyBytes(collection.totalSize)}
 								</div>
