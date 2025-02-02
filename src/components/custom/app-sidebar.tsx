@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronRightIcon, DatabaseIcon, SearchIcon, TableIcon } from 'lucide-react';
+import { ChevronRightIcon, DatabaseIcon, SearchIcon, SlashIcon, TableIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -156,8 +156,10 @@ export function CollapsibleDatabaseSidebarItem({
 						{filteredCollections(database).map((collection, index) => (
 							<SidebarMenuButton key={index} className="data-[active=true]:bg-transparent">
 								<TableIcon />
-								{collection.name} ({collection.documentCount})
-								<div className="ml-auto text-muted-foreground text-xs">
+								{collection.name}
+								<div className="ml-auto text-muted-foreground text-xs flex gap-1">
+									{collection.documentCount}
+									<SlashIcon size={8} className="my-auto" />
 									{prettyBytes(collection.totalSize)}
 								</div>
 							</SidebarMenuButton>
