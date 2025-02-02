@@ -5,7 +5,6 @@ import { useTheme } from 'next-themes';
 import {
 	CheckIcon,
 	ChevronDownIcon,
-	ChevronRightIcon,
 	PenIcon,
 	PlusSquareIcon,
 	TrashIcon,
