@@ -23,6 +23,7 @@ export function ClientJsonEditor(props: JsonEditorProps) {
 		<JsonEditor
 			theme={jsonTheme}
 			enableClipboard={false}
+			rootName={''}
 			icons={{
 				edit: <PenIcon size={14} />,
 				delete: <TrashIcon size={14} className="text-red-600" />,

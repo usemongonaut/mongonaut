@@ -10,6 +10,10 @@ import {
 } from '@/components/ui/breadcrumb';
 import { AppContainer } from '@/components/custom/app-container';
 import { ClientJsonEditor } from '@/components/custom/client-json-editor';
+import {
+	getDatabaseCollectionContent,
+	getDatabaseCollectionStats,
+} from '@/actions/databaseOperation';
 
 type Props = {
 	params: Promise<{
@@ -21,18 +25,12 @@ type Props = {
 const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 	const { database, collection } = await params;
 
-	const testData = {
-		_id: '1',
-		name: 'John Doe',
-		age: 30,
-		email: 'lol@dd.de',
-		names: ['John Doe', 'Jane Doe', 'John Smith', 'Jane Smith', 'John Johnson', 'Jane Johnson'],
-	};
+	const stats = await getDatabaseCollectionStats(database, collection);
+	const content = await getDatabaseCollectionContent(database, collection);
+	const contentAsJson = await content.find().toArray();
 
-	const data = {
-		documents: 9,
-		totalSize: 424233,
-	};
+	// Parsing json twice to simplify the data for client-side
+	const plainJson = JSON.stringify(contentAsJson, null, 2);
 
 	return (
 		<AppContainer>
@@ -56,7 +54,10 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
 				<div className="lg:col-span-2 border rounded-lg">
-					<ClientJsonEditor className="w-full h-full" data={testData} />
+					<ClientJsonEditor
+						className="w-full h-full overflow-scroll"
+						data={JSON.parse(plainJson)}
+					/>
 				</div>
 				<div>
 					<div className="border rounded-lg p-4 grid gap-2 sticky top-4">
@@ -66,10 +67,12 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 							<div className="text-muted-foreground">
 								<p>Documents</p>
 								<p>Collection Size</p>
+								<p>Avg. Object Size</p>
 							</div>
 							<div>
-								<p>{data.documents}</p>
-								<p>{prettyBytes(data.totalSize)}</p>
+								<p>{stats.count}</p>
+								<p>{prettyBytes(stats.size)}</p>
+								<p>{prettyBytes(stats.avgObjSize)}</p>
 							</div>
 						</div>
 					</div>

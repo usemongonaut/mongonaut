@@ -34,6 +34,12 @@ export class MongoController {
 		return this.client.db(name).listCollections();
 	}
 
+	public async getCollectionContent(dbName: string, collectionName: string) {
+		await this.client.connect();
+		const db = this.client.db(dbName);
+		return db.collection(collectionName);
+	}
+
 	public async getCollectionStats(
 		dbName: string,
 		collectionName: string,
