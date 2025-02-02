@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
 import { Document } from 'mongodb';
+import { redirect } from 'next/navigation';
 import {
 	Sidebar,
 	SidebarContent,
@@ -152,7 +153,11 @@ export function CollapsibleDatabaseSidebarItem({
 				<CollapsibleContent>
 					<SidebarMenuSub>
 						{filteredCollections(database).map((collection, index) => (
-							<SidebarMenuButton key={index} className="data-[active=true]:bg-transparent">
+							<SidebarMenuButton
+								key={index}
+								onClick={() => redirect(`/${database.name}/${collection.name}`)}
+								className="data-[active=true]:bg-transparent cursor-pointer"
+							>
 								<TableIcon />
 								{collection.name}
 								<div className="ml-auto text-muted-foreground text-xs flex gap-1">
