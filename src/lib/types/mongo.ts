@@ -18,18 +18,18 @@ export interface CollectionStats {
 }
 
 export interface DatabaseStats {
-    db: string;
-    collections: number;
-    views: number;
-    objects: number;
-    avgObjSize: number;
-    dataSize: number;
-    storageSize: number;
-    indexes: number;
-    indexSize: number;
-    totalSize: number;
-    scaleFactor: number;
-    fsUsedSize: number;
-    fsTotalSize: number;
-    ok: number;
+	db: string;
+	collections: number;
+	views: number;
+	objects: number;
+	avgObjSize: number;
+	dataSize: number;
+	storageSize: number;
+	indexes: number;
+	indexSize: number;
+	totalSize: number;
+	scaleFactor: number;
+	fsUsedSize: number;
+	fsTotalSize: number;
+	ok: number;
 }

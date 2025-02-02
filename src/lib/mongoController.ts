@@ -14,7 +14,6 @@ export class MongoController {
 		const adminDb = this.client.db().admin();
 		return adminDb.serverInfo();
 	}
-	
 
 	// DATABASE
 	public async listDatabases() {
