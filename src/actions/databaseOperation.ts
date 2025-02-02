@@ -5,6 +5,10 @@ import { Database } from '@/lib/types/mongo';
 
 const mongo = new MongoController();
 
+export const getServerInfo = async () => {
+	return mongo.getServerInfo();
+};
+
 export const listDatabases = async () => {
 	return mongo.listDatabases();
 };
