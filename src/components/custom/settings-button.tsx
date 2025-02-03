@@ -7,10 +7,11 @@ import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { cn, usePreferredTheme } from '@/lib/utils';
 
 export function SettingsButton() {
-	const { theme, setTheme } = useTheme();
+	const { setTheme } = useTheme();
+	const theme = usePreferredTheme();
 
 	const toggleTheme = (dark: boolean) => {
 		setTheme(!dark ? 'light' : 'dark');
