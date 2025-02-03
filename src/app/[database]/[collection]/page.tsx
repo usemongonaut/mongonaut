@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { DatabaseIcon, TableIcon } from 'lucide-react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
+import { redirect } from 'next/navigation';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -13,6 +14,7 @@ import { ClientJsonEditor } from '@/components/custom/client-json-editor';
 import {
 	getDatabaseCollectionContent,
 	getDatabaseCollectionStats,
+	isDatabaseCollectionExisting,
 } from '@/actions/databaseOperation';
 
 type Props = {
@@ -24,6 +26,10 @@ type Props = {
 
 const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 	const { database, collection } = await params;
+
+	if (!(await isDatabaseCollectionExisting(database, collection))) {
+		redirect('/404');
+	}
 
 	const stats = await getDatabaseCollectionStats(database, collection);
 	const content = await getDatabaseCollectionContent(database, collection);

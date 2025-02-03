@@ -41,6 +41,13 @@ export class MongoController {
 		return db.collection(collectionName);
 	}
 
+	public async isCollectionExisting(dbName: string, collectionName: string) {
+		await this.client.connect();
+		const db = this.client.db(dbName);
+		const collections = await db.listCollections().toArray();
+		return collections.some(col => col.name === collectionName);
+	}
+
 	public async getCollectionStats(
 		dbName: string,
 		collectionName: string,
