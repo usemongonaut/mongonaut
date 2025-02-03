@@ -1,11 +1,12 @@
 import { MongoClient } from 'mongodb';
 import { CollectionStats, DatabaseStats } from '@/lib/types/mongo';
+import { env } from '@/lib/utils';
 
 export class MongoController {
 	readonly client: MongoClient;
 
 	constructor() {
-		this.client = new MongoClient(process.env.MONGODB_URL ?? 'mongodb://localhost:27017');
+		this.client = new MongoClient(env('MONGO_CONNECTION_URL', 'mongodb://localhost:27017'));
 	}
 
 	// SERVER
