@@ -92,12 +92,12 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 							<div className="text-muted-foreground">
 								<p>Documents</p>
 								<p>Collection Size</p>
-								<p>Avg. Object Size</p>
+								{stats.avgObjSize && <p>Avg. Object Size</p>}
 							</div>
 							<div>
 								<p>{stats.count}</p>
 								<p>{prettyBytes(stats.size)}</p>
-								<p>{prettyBytes(stats.avgObjSize)}</p>
+								{stats.avgObjSize && <p>{prettyBytes(stats.avgObjSize)}</p>}
 							</div>
 						</div>
 					</div>
