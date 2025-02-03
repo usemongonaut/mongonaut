@@ -36,10 +36,7 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 
 	const stats = await getDatabaseCollectionStats(database, collection);
 	const content = await getDatabaseCollectionContent(database, collection);
-	const contentAsJson = await content.find().toArray();
-
-	// Parsing json twice to simplify the data for client-side
-	const plainJson = JSON.stringify(contentAsJson, null, 2);
+	const contentArray = await content.find().toArray();
 
 	return (
 		<AppContainer>
@@ -62,21 +59,31 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 			</Breadcrumb>
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
-				<div className="lg:col-span-2 border rounded-lg relative">
-					<ClientJsonEditor
-						className="w-full h-full overflow-scroll"
-						data={JSON.parse(plainJson)}
-						restrictAdd={readonly}
-						restrictDelete={readonly}
-						restrictEdit={readonly}
-					/>
+				<div className="flex flex-col gap-4 lg:col-span-2">
+					{contentArray.map(doc => {
+						const plain = JSON.stringify(doc);
+						const hash = plain.hashCode();
 
-					{readonly && (
-						<p className="text-xs font-semibold flex gap-2 text-primary-foreground uppercase bg-primary rounded-full py-0.5 px-2.5 absolute top-2.5 right-2.5">
-							<EyeIcon size={12} className="my-auto" />
-							Read-Only
-						</p>
-					)}
+						return (
+							<div className="border rounded-lg relative overflow-hidden" key={hash}>
+								<ClientJsonEditor
+									className="w-full h-full overflow-scroll"
+									data={JSON.parse(plain)}
+									restrictAdd={readonly}
+									restrictDelete={readonly}
+									restrictEdit={readonly}
+									collapse={1}
+								/>
+
+								{readonly && (
+									<p className="text-xs font-semibold flex gap-2 text-primary-foreground uppercase bg-primary rounded-full py-0.5 px-2.5 absolute top-2.5 right-2.5">
+										<EyeIcon size={12} className="my-auto" />
+										Read-Only
+									</p>
+								)}
+							</div>
+						);
+					})}
 				</div>
 				<div>
 					<div className="border rounded-lg p-4 grid gap-2 sticky top-4">
