@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { DatabaseIcon, TableIcon } from 'lucide-react';
+import { DatabaseIcon, EyeIcon, TableIcon } from 'lucide-react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
 import { redirect } from 'next/navigation';
 import {
@@ -62,7 +62,7 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 			</Breadcrumb>
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
-				<div className="lg:col-span-2 border rounded-lg">
+				<div className="lg:col-span-2 border rounded-lg relative">
 					<ClientJsonEditor
 						className="w-full h-full overflow-scroll"
 						data={JSON.parse(plainJson)}
@@ -70,6 +70,13 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 						restrictDelete={readonly}
 						restrictEdit={readonly}
 					/>
+
+					{readonly && (
+						<p className="text-xs font-semibold flex gap-2 text-primary-foreground uppercase bg-primary rounded-full py-0.5 px-2.5 absolute top-2.5 right-2.5">
+							<EyeIcon size={12} className="my-auto" />
+							Read-Only
+						</p>
+					)}
 				</div>
 				<div>
 					<div className="border rounded-lg p-4 grid gap-2 sticky top-4">
