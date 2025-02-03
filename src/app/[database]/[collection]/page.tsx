@@ -60,12 +60,11 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
 				<div className="flex flex-col gap-4 lg:col-span-2">
-					{contentArray.map(doc => {
+					{contentArray.map((doc, index) => {
 						const plain = JSON.stringify(doc);
-						const hash = plain.hashCode();
 
 						return (
-							<div className="border rounded-lg relative overflow-hidden" key={hash}>
+							<div className="border rounded-lg relative overflow-hidden" key={index}>
 								<ClientJsonEditor
 									className="w-full h-full overflow-scroll"
 									data={JSON.parse(plain)}
