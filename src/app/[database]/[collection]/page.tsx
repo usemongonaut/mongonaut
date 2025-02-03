@@ -32,7 +32,7 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 		redirect('/404');
 	}
 
-	const readonly = envBool('MONGONAUT_READONLY', false);
+	const isReadonly = envBool('MONGONAUT_READONLY', false);
 
 	const stats = await getDatabaseCollectionStats(database, collection);
 	const content = await getDatabaseCollectionContent(database, collection);
