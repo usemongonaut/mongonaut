@@ -68,9 +68,9 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 								<ClientJsonEditor
 									className="w-full h-full overflow-scroll"
 									data={JSON.parse(plain)}
-									restrictAdd={readonly}
-									restrictDelete={readonly}
-									restrictEdit={readonly}
+									restrictAdd={isReadonly}
+									restrictDelete={isReadonly}
+									restrictEdit={isReadonly}
 									collapse={1}
 								/>
 
