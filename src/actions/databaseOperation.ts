@@ -17,6 +17,18 @@ export const getDatabaseCollection = async (name: string) => {
 	return mongo.getDatabaseCollections(name);
 };
 
+export const getDatabaseCollectionStats = async (database: string, collection: string) => {
+	return mongo.getCollectionStats(database, collection);
+};
+
+export const isDatabaseCollectionExisting = async (database: string, collection: string) => {
+	return mongo.isCollectionExisting(database, collection);
+};
+
+export const getDatabaseCollectionContent = async (database: string, collection: string) => {
+	return mongo.getCollectionContent(database, collection);
+};
+
 export const collectSidebarDatabaseInformation = async (): Promise<Database[]> => {
 	const { databases } = await mongo.listDatabases();
 

@@ -1,12 +1,21 @@
+'use client';
+
 import { ExternalLinkIcon, HeartIcon, LucideIcon, SettingsIcon, SunMoonIcon } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
 export function SettingsButton() {
+	const { theme, setTheme } = useTheme();
+
+	const toggleTheme = (dark: boolean) => {
+		setTheme(!dark ? 'light' : 'dark');
+	};
+
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
@@ -16,7 +25,7 @@ export function SettingsButton() {
 			</PopoverTrigger>
 			<PopoverContent className="p-1.5 grid gap-1 w-56">
 				<SettingsMenuItem icon={SunMoonIcon} label="Dark Mode">
-					<Switch />
+					<Switch checked={theme === 'dark'} onCheckedChange={e => toggleTheme(e)} />
 				</SettingsMenuItem>
 				<SettingsMenuItem icon={HeartIcon} label="Become a Sponsor" href="https://github.com/" />
 			</PopoverContent>
