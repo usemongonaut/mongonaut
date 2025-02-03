@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { DatabaseIcon, EyeIcon, TableIcon } from 'lucide-react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -17,6 +17,7 @@ import {
 	isDatabaseCollectionExisting,
 } from '@/actions/databaseOperation';
 import { envBool } from '@/lib/env';
+import { Input } from '@/components/ui/input';
 
 type Props = {
 	params: Promise<{
@@ -29,7 +30,7 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 	const { database, collection } = await params;
 
 	if (!(await isDatabaseCollectionExisting(database, collection))) {
-		redirect('/404');
+		notFound();
 	}
 
 	const isReadonly = envBool('MONGONAUT_READONLY', false);
@@ -60,6 +61,10 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
 				<div className="flex flex-col gap-4 lg:col-span-2">
+					<div>
+						<Input placeholder={`Search in ${database}, ${collection}...`} />
+					</div>
+
 					{contentArray.map((doc, index) => {
 						const plain = JSON.stringify(doc);
 
@@ -74,7 +79,7 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 									collapse={1}
 								/>
 
-								{readonly && (
+								{isReadonly && (
 									<p className="text-xs font-semibold flex gap-2 text-primary-foreground uppercase bg-primary rounded-full py-0.5 px-2.5 absolute top-2.5 right-2.5">
 										<EyeIcon size={12} className="my-auto" />
 										Read-Only
