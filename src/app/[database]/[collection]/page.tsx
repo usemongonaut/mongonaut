@@ -16,6 +16,7 @@ import {
 	getDatabaseCollectionStats,
 	isDatabaseCollectionExisting,
 } from '@/actions/databaseOperation';
+import { envBool } from '@/lib/env';
 
 type Props = {
 	params: Promise<{
@@ -30,6 +31,8 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 	if (!(await isDatabaseCollectionExisting(database, collection))) {
 		redirect('/404');
 	}
+
+	const readonly = envBool('MONGONAUT_READONLY', false);
 
 	const stats = await getDatabaseCollectionStats(database, collection);
 	const content = await getDatabaseCollectionContent(database, collection);
@@ -63,6 +66,9 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 					<ClientJsonEditor
 						className="w-full h-full overflow-scroll"
 						data={JSON.parse(plainJson)}
+						restrictAdd={readonly}
+						restrictDelete={readonly}
+						restrictEdit={readonly}
 					/>
 				</div>
 				<div>

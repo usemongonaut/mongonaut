@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { CollectionStats, DatabaseStats } from '@/lib/types/mongo';
-import { env } from '@/lib/utils';
+import { env } from '@/lib/env';
 
 export class MongoController {
 	readonly client: MongoClient;
