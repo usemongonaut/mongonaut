@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { DatabaseIcon, EyeIcon, TableIcon } from 'lucide-react';
+import { DatabaseIcon, TableIcon } from 'lucide-react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -10,7 +10,6 @@ import {
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { AppContainer } from '@/components/custom/app-container';
-import { ClientJsonEditor } from '@/components/custom/client-json-editor';
 import {
 	getDatabaseCollectionContent,
 	getDatabaseCollectionStats,
