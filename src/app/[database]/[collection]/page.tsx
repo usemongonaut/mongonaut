@@ -16,8 +16,7 @@ import {
 	isDatabaseCollectionExisting,
 } from '@/actions/databaseOperation';
 import { envBool } from '@/lib/env';
-import { Input } from '@/components/ui/input';
-import { ClientDocumentView } from '@/components/custom/client-document-view';
+import { ClientDocumentsView } from '@/components/custom/client-document-view';
 
 type Props = {
 	params: Promise<{
@@ -61,15 +60,12 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
 				<div className="flex flex-col gap-4 lg:col-span-2">
-					<div>
-						<Input placeholder={`Search in ${database}, ${collection}...`} />
-					</div>
-
-					{contentArray.map((doc, index) => {
-						const plain = JSON.stringify(doc);
-
-						return <ClientDocumentView key={index} data={plain} isReadonly={isReadonly} />;
-					})}
+					<ClientDocumentsView
+						contentArray={contentArray}
+						isReadonly={isReadonly}
+						database={database}
+						collection={collection}
+					/>
 				</div>
 				<div>
 					<div className="border rounded-lg p-4 grid gap-2 sticky top-4">
