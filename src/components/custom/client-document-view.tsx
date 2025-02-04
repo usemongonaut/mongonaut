@@ -35,6 +35,12 @@ export function ClientDocumentsView({
 				/>
 			</div>
 
+			{filteredContentArray.length === 0 && (
+				<div className={'p-6 text-center border border-dashed rounded-lg'}>
+					<p className="text-muted-foreground">No documents found.</p>
+				</div>
+			)}
+
 			{filteredContentArray.map((doc, index) => {
 				const plain = JSON.stringify(doc);
 
