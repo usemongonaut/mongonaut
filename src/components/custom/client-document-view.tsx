@@ -22,7 +22,7 @@ export function ClientDocumentsView({
 
 	const filteredContentArray = contentArray.filter(doc => {
 		const plain = JSON.stringify(doc);
-		return plain.toLowerCase().includes(search.toLowerCase());
+		return plain.toLowerCase().trim().includes(search.toLowerCase().trim());
 	});
 
 	return (
