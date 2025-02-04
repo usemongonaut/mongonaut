@@ -10,6 +10,7 @@ import {
 	getServerInfo,
 	listDatabases,
 } from '@/actions/databaseOperation';
+import Providers from '@/app/providers';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -36,20 +37,22 @@ export default async function RootLayout({
 	const collectedDbInfo = await collectSidebarDatabaseInformation();
 
 	return (
-		<html lang="en" className="w-full h-full">
+		<html lang="en" className="w-full h-full" suppressHydrationWarning>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full`}>
-				<SidebarProvider
-					style={
-						{
-							'--sidebar-width': '350px',
-						} as React.CSSProperties
-					}
-				>
-					<AppSidebar databases={collectedDbInfo} totalSize={totalSize} serverInfo={serverInfo} />
-					<SidebarInset>
-						<main className="min-h-screen w-full">{children}</main>
-					</SidebarInset>
-				</SidebarProvider>
+				<Providers>
+					<SidebarProvider
+						style={
+							{
+								'--sidebar-width': '350px',
+							} as React.CSSProperties
+						}
+					>
+						<AppSidebar databases={collectedDbInfo} totalSize={totalSize} serverInfo={serverInfo} />
+						<SidebarInset>
+							<main className="min-h-screen w-full">{children}</main>
+						</SidebarInset>
+					</SidebarProvider>
+				</Providers>
 			</body>
 		</html>
 	);

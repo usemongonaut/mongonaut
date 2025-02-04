@@ -1,7 +1,6 @@
 'use client';
 
 import { githubDarkTheme, githubLightTheme, JsonEditor, JsonEditorProps } from 'json-edit-react';
-import { useTheme } from 'next-themes';
 import {
 	CheckIcon,
 	ChevronDownIcon,
@@ -10,9 +9,10 @@ import {
 	TrashIcon,
 	XIcon,
 } from 'lucide-react';
+import { usePreferredTheme } from '@/lib/utils';
 
 export function ClientJsonEditor(props: JsonEditorProps) {
-	const { theme } = useTheme();
+	const theme = usePreferredTheme();
 	let jsonTheme = githubLightTheme;
 
 	if (theme === 'dark') {
