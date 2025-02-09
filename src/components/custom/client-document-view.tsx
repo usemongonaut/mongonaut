@@ -7,7 +7,7 @@ export function ClientDocumentView({ data, isReadonly }: { data: string; isReado
 	return (
 		<div className="border rounded-lg relative overflow-hidden">
 			<ClientJsonEditor
-				className="w-full h-full overflow-scroll"
+				className="w-full h-full overflow-scroll !bg-card !dark:border-[#242424]"
 				data={JSON.parse(data)}
 				restrictAdd={isReadonly}
 				restrictDelete={isReadonly}
