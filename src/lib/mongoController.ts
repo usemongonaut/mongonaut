@@ -41,6 +41,31 @@ export class MongoController {
 		return db.collection(collectionName);
 	}
 
+	public async searchInCollection(
+		dbName: string, 
+		collectionName: string,
+		searchKey: string,
+		searchValue: string
+	) {
+		await this.client.connect();
+		const db = this.client.db(dbName);
+		const collection = db.collection(collectionName);
+	
+		const query = { 
+			[searchKey]: { 
+				$regex: searchValue, 
+				$options: 'i'  // case-insensitive
+			}
+		};
+	
+		try {
+			return await collection.find(query).toArray();
+		} catch (error) {
+			console.error('error in collection search:', error);
+			return [];
+		}
+	}
+
 	public async isCollectionExisting(dbName: string, collectionName: string) {
 		await this.client.connect();
 		const db = this.client.db(dbName);

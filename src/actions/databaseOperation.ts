@@ -29,6 +29,15 @@ export const getDatabaseCollectionContent = async (database: string, collection:
 	return mongo.getCollectionContent(database, collection);
 };
 
+export const searchInCollection = async (
+	database: string,
+	collection: string,
+	searchKey: string,
+	searchValue: string,
+) => {
+	return mongo.searchInCollection(database, collection, searchKey, searchValue);
+};
+
 export const collectSidebarDatabaseInformation = async (): Promise<Database[]> => {
 	const { databases } = await mongo.listDatabases();
 
