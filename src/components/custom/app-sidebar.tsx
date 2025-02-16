@@ -24,15 +24,18 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Input } from '@/components/ui/input';
 import { SettingsButton } from '@/components/custom/settings-button';
 import { Database } from '@/lib/types/mongo';
+import { envBool } from '@/lib/env';
 
 export function AppSidebar({
 	databases,
 	totalSize,
 	serverInfo,
+	readOnly,
 }: {
 	databases: Database[];
 	totalSize?: number;
 	serverInfo?: Document;
+	readOnly?: boolean;
 }) {
 	const [search, setSearch] = useState('');
 
@@ -102,7 +105,7 @@ export function AppSidebar({
 					<Link
 						href="https://github.com/usemongonaut/mongonaut"
 						target="_blank"
-						className="my-auto"
+						className="my-auto flex gap-2"
 					>
 						<Image
 							src="/images/logo.svg"
@@ -111,6 +114,12 @@ export function AppSidebar({
 							width={30}
 							height={30}
 						/>
+
+						{readOnly && (
+							<span className="text-primary-foreground rounded-full text-xs my-auto bg-primary px-2.5 py-0.5">
+								Read-only
+							</span>
+						)}
 					</Link>
 					<div className="my-auto flex">
 						<SettingsButton />

@@ -11,6 +11,7 @@ import {
 	listDatabases,
 } from '@/actions/databaseOperation';
 import Providers from '@/app/providers';
+import { envBool } from '@/lib/env';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -47,7 +48,12 @@ export default async function RootLayout({
 							} as React.CSSProperties
 						}
 					>
-						<AppSidebar databases={collectedDbInfo} totalSize={totalSize} serverInfo={serverInfo} />
+						<AppSidebar
+							readOnly={envBool('MONGONAUT_READONLY', false)}
+							databases={collectedDbInfo}
+							totalSize={totalSize}
+							serverInfo={serverInfo}
+						/>
 						<SidebarInset>
 							<main className="min-h-screen w-full">{children}</main>
 						</SidebarInset>
