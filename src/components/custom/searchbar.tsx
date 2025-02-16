@@ -1,9 +1,10 @@
 'use client';
 
-import { FilterIcon } from 'lucide-react';
+import { FilterIcon, FilterXIcon } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface Props {
 	defaultKey?: string;
@@ -31,8 +32,20 @@ export default function Searchbar(props: Props) {
 
 	return (
 		<form onSubmit={handleSubmit} className="grid grid-cols-3 gap-2">
-			<div className="flex gap-4">
-				<FilterIcon className="text-muted-foreground my-auto" />
+			<div className="flex gap-2">
+				<Button
+					variant={'ghost'}
+					onClick={() => {
+						setKey(undefined);
+						setSearchValue(undefined);
+					}}
+				>
+					{key && searchValue ? (
+						<FilterXIcon className={'text-muted-foreground'} />
+					) : (
+						<FilterIcon className={'text-muted-foreground'} />
+					)}
+				</Button>
 				<Input placeholder="Key" value={key || ''} onChange={e => setKey(e.target.value)} />
 			</div>
 			<Input
