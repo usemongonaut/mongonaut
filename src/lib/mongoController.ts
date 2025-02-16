@@ -42,22 +42,22 @@ export class MongoController {
 	}
 
 	public async searchInCollection(
-		dbName: string, 
+		dbName: string,
 		collectionName: string,
 		searchKey: string,
-		searchValue: string
+		searchValue: string,
 	) {
 		await this.client.connect();
 		const db = this.client.db(dbName);
 		const collection = db.collection(collectionName);
-	
-		const query = { 
-			[searchKey]: { 
-				$regex: searchValue, 
-				$options: 'i'  // case-insensitive
-			}
+
+		const query = {
+			[searchKey]: {
+				$regex: searchValue,
+				$options: 'i', // case-insensitive
+			},
 		};
-	
+
 		try {
 			return await collection.find(query).toArray();
 		} catch (error) {

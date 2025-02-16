@@ -2,6 +2,8 @@ import { FC } from 'react';
 import { DatabaseIcon, TableIcon } from 'lucide-react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
 import { notFound } from 'next/navigation';
+import { Document } from 'bson';
+import { WithId } from 'mongodb';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -14,20 +16,23 @@ import {
 	getDatabaseCollectionContent,
 	getDatabaseCollectionStats,
 	isDatabaseCollectionExisting,
+	searchInCollection,
 } from '@/actions/databaseOperation';
 import { envBool } from '@/lib/env';
-import { Input } from '@/components/ui/input';
-import { ClientDocumentView } from '@/components/custom/client-document-view';
+import { DocumentView } from '@/components/custom/document-view';
+import Searchbar from '@/components/custom/searchbar';
 
 type Props = {
 	params: Promise<{
 		database: string;
 		collection: string;
 	}>;
+	searchParams?: Promise<{ [key: string]: string | undefined }>;
 };
 
-const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
+const CollectionDetailPage: FC<Props> = async ({ params: params, searchParams: searchParams }) => {
 	const { database, collection } = await params;
+	const query = await searchParams;
 
 	if (!(await isDatabaseCollectionExisting(database, collection))) {
 		notFound();
@@ -36,8 +41,17 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 	const isReadonly = envBool('MONGONAUT_READONLY', false);
 
 	const stats = await getDatabaseCollectionStats(database, collection);
-	const content = await getDatabaseCollectionContent(database, collection);
-	const contentArray = await content.find().toArray();
+	let contentArray: WithId<Document>[] = [];
+
+	if (query?.key && query?.value) {
+		const key = query['key'];
+		const value = query['value'];
+
+		contentArray = await searchInCollection(database, collection, key, value);
+	} else {
+		const content = await getDatabaseCollectionContent(database, collection);
+		contentArray = await content.find().toArray();
+	}
 
 	return (
 		<AppContainer>
@@ -60,15 +74,16 @@ const CollectionDetailPage: FC<Props> = async ({ params: params }) => {
 			</Breadcrumb>
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
-				<div className="flex flex-col gap-4 lg:col-span-2">
-					<div>
-						<Input placeholder={`Search in ${database}, ${collection}...`} />
-					</div>
+				<div className="flex flex-col gap-4 lg:col-span-2 w-full">
+					<Searchbar
+						defaultKey={query ? query['key'] : undefined}
+						defaultValue={query ? query['value'] : undefined}
+					/>
 
 					{contentArray.map((doc, index) => {
 						const plain = JSON.stringify(doc);
 
-						return <ClientDocumentView key={index} data={plain} isReadonly={isReadonly} />;
+						return <DocumentView key={index} data={plain} isReadonly={isReadonly} />;
 					})}
 				</div>
 				<div>
