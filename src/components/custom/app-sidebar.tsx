@@ -24,7 +24,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Input } from '@/components/ui/input';
 import { SettingsButton } from '@/components/custom/settings-button';
 import { Database } from '@/lib/types/mongo';
-import { envBool } from '@/lib/env';
 
 export function AppSidebar({
 	databases,
