@@ -9,3 +9,15 @@
 ## About Mongonaut
 
 Mongonaut is a lightweight and easy-to-use MongoDB web-service to manage your MongoDB built with [Next.js](https://nextjs.org/).
+
+> 🚧 Work in Progress! Mongonaut is currently Read-Only Mode only. Editing documents will follow with future updates.
+
+![Screenshot](https://i.imgur.com/0T9aNSg.png)
+
+## Installation and Securing
+
+How to install and secure Mongonaut is explained in our [documentation](https://mongonaut.org/docs).
+
+## License
+
+Mongonaut is licensed under the [MIT License](LICENSE).
