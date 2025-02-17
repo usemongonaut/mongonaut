@@ -2,8 +2,6 @@ import { FC } from 'react';
 import { DatabaseIcon, TableIcon } from 'lucide-react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
 import { notFound } from 'next/navigation';
-import { Document } from 'bson';
-import { WithId } from 'mongodb';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -12,7 +10,6 @@ import {
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { AppContainer } from '@/components/custom/app-container';
-import { Button } from '@/components/ui/button';
 import {
 	getDatabaseCollectionContent,
 	getDatabaseCollectionStats,
