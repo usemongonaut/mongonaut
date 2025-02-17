@@ -1,6 +1,13 @@
 'use client';
 
-import { ExternalLinkIcon, HeartIcon, LucideIcon, SettingsIcon, SunMoonIcon } from 'lucide-react';
+import {
+	ExternalLinkIcon,
+	HeartIcon,
+	InfoIcon,
+	LucideIcon,
+	SettingsIcon,
+	SunMoonIcon,
+} from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
@@ -28,7 +35,13 @@ export function SettingsButton() {
 				<SettingsMenuItem icon={SunMoonIcon} label="Dark Mode">
 					<Switch checked={theme === 'dark'} onCheckedChange={e => toggleTheme(e)} />
 				</SettingsMenuItem>
-				<SettingsMenuItem icon={HeartIcon} label="Become a Sponsor" href="https://github.com/" />
+				<SettingsMenuItem icon={InfoIcon} label="About" href="/about" />
+				<SettingsMenuItem
+					icon={HeartIcon}
+					external
+					label="Become a Sponsor"
+					href="https://github.com/"
+				/>
 			</PopoverContent>
 		</Popover>
 	);
@@ -38,6 +51,7 @@ export function SettingsMenuItem(props: {
 	icon: LucideIcon;
 	label: string;
 	href?: string;
+	external?: boolean;
 	children?: string | React.ReactNode | React.ReactNode[];
 }) {
 	return (
@@ -54,7 +68,9 @@ export function SettingsMenuItem(props: {
 				</div>
 
 				{props.children ??
-					(props.href && <ExternalLinkIcon className="my-auto text-muted-foreground" size={14} />)}
+					(props.external && (
+						<ExternalLinkIcon className="my-auto text-muted-foreground" size={14} />
+					))}
 			</div>
 		</Link>
 	);
