@@ -3,7 +3,7 @@
 import { ChevronRightIcon, DatabaseIcon, SearchIcon, SlashIcon, TableIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
 import { Document } from 'mongodb';
 import { redirect } from 'next/navigation';
@@ -37,6 +37,22 @@ export function AppSidebar({
 	readOnly?: boolean;
 }) {
 	const [search, setSearch] = useState('');
+	const [openedTables, setOpenedTables] = useState<string[]>([]);
+
+	useEffect(() => {
+		const openedTables = localStorage.getItem('openedTables') || '[]';
+		setOpenedTables(JSON.parse(openedTables));
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem('openedTables', JSON.stringify(openedTables));
+	}, [openedTables]);
+
+	const toggleTable = (name: string) => {
+		setOpenedTables(prev => (prev.includes(name) ? prev.filter(p => p !== name) : [...prev, name]));
+	};
+
+	const isTableOpen = (name: string) => openedTables.includes(name);
 
 	const filteredDatabases = databases.filter(database => {
 		return (
@@ -70,7 +86,13 @@ export function AppSidebar({
 						<SidebarMenu>
 							{filteredDatabases.length > 0 ? (
 								filteredDatabases.map((database, index) => (
-									<CollapsibleDatabaseSidebarItem key={index} database={database} search={search} />
+									<CollapsibleDatabaseSidebarItem
+										open={isTableOpen(database.name) || search.trim().length > 0}
+										key={index}
+										database={database}
+										search={search}
+										onOpenChange={() => toggleTable(database.name)}
+									/>
 								))
 							) : (
 								<SidebarMenuItem className="border border-dashed px-2 py-4 rounded">
@@ -132,9 +154,13 @@ export function AppSidebar({
 export function CollapsibleDatabaseSidebarItem({
 	database,
 	search,
+	open,
+	onOpenChange,
 }: {
 	database: Database;
 	search: string;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
 }) {
 	const filteredCollections = (database: Database) => {
 		return database.collections.filter(
@@ -146,7 +172,11 @@ export function CollapsibleDatabaseSidebarItem({
 
 	return (
 		<SidebarMenuItem>
-			<Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90">
+			<Collapsible
+				open={open}
+				onOpenChange={onOpenChange}
+				className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
+			>
 				<CollapsibleTrigger asChild>
 					<SidebarMenuButton>
 						<ChevronRightIcon className="transition-transform" />
