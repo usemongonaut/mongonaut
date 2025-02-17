@@ -35,10 +35,44 @@ export class MongoController {
 		return this.client.db(name).listCollections();
 	}
 
-	public async getCollectionContent(dbName: string, collectionName: string) {
+	public async getCollectionContent(
+		dbName: string,
+		collectionName: string,
+		page: number = 1,
+		pageSize: number = 10,
+	) {
 		await this.client.connect();
 		const db = this.client.db(dbName);
-		return db.collection(collectionName);
+		const collection = db.collection(collectionName);
+
+		const skip = (page - 1) * pageSize;
+
+		try {
+			const total = await collection.countDocuments();
+
+			const documents = await collection.find().skip(skip).limit(pageSize).toArray();
+
+			return {
+				documents,
+				pagination: {
+					total,
+					page,
+					pageSize,
+					totalPages: Math.ceil(total / pageSize),
+				},
+			};
+		} catch (error) {
+			console.error('Error fetching collection content:', error);
+			return {
+				documents: [],
+				pagination: {
+					total: 0,
+					page: 1,
+					pageSize: pageSize,
+					totalPages: 0,
+				},
+			};
+		}
 	}
 
 	public async searchInCollection(
@@ -46,6 +80,8 @@ export class MongoController {
 		collectionName: string,
 		searchKey: string,
 		searchValue: string,
+		page: number = 1,
+		pageSize: number = 10,
 	) {
 		await this.client.connect();
 		const db = this.client.db(dbName);
@@ -54,15 +90,36 @@ export class MongoController {
 		const query = {
 			[searchKey]: {
 				$regex: searchValue,
-				$options: 'i', // case-insensitive
+				$options: 'i',
 			},
 		};
 
+		const skip = (page - 1) * pageSize;
+
 		try {
-			return await collection.find(query).toArray();
+			const total = await collection.countDocuments(query);
+			const documents = await collection.find(query).skip(skip).limit(pageSize).toArray();
+
+			return {
+				documents,
+				pagination: {
+					total,
+					page,
+					pageSize,
+					totalPages: Math.ceil(total / pageSize),
+				},
+			};
 		} catch (error) {
-			console.error('error in collection search:', error);
-			return [];
+			console.error('Error in collection search:', error);
+			return {
+				documents: [],
+				pagination: {
+					total: 0,
+					page: 1,
+					pageSize: pageSize,
+					totalPages: 0,
+				},
+			};
 		}
 	}
 

@@ -25,8 +25,13 @@ export const isDatabaseCollectionExisting = async (database: string, collection:
 	return mongo.isCollectionExisting(database, collection);
 };
 
-export const getDatabaseCollectionContent = async (database: string, collection: string) => {
-	return mongo.getCollectionContent(database, collection);
+export const getDatabaseCollectionContent = async (
+	database: string,
+	collection: string,
+	page: number = 1,
+	pageSize: number = 10,
+) => {
+	return mongo.getCollectionContent(database, collection, page, pageSize);
 };
 
 export const searchInCollection = async (
@@ -34,8 +39,10 @@ export const searchInCollection = async (
 	collection: string,
 	searchKey: string,
 	searchValue: string,
+	page: number = 1,
+	pageSize: number = 10,
 ) => {
-	return mongo.searchInCollection(database, collection, searchKey, searchValue);
+	return mongo.searchInCollection(database, collection, searchKey, searchValue, page, pageSize);
 };
 
 export const collectSidebarDatabaseInformation = async (): Promise<Database[]> => {

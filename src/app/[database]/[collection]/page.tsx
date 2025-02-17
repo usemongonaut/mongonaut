@@ -12,6 +12,7 @@ import {
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { AppContainer } from '@/components/custom/app-container';
+import { Button } from '@/components/ui/button';
 import {
 	getDatabaseCollectionContent,
 	getDatabaseCollectionStats,
@@ -21,36 +22,48 @@ import {
 import { envBool } from '@/lib/env';
 import { DocumentView } from '@/components/custom/document-view';
 import Searchbar from '@/components/custom/searchbar';
+import { PaginationControls } from '@/components/custom/pagination-controls';
 
 type Props = {
 	params: Promise<{
 		database: string;
 		collection: string;
 	}>;
-	searchParams?: Promise<{ [key: string]: string | undefined }>;
+	searchParams?: Promise<{
+		[key: string]: string | undefined;
+		page?: string;
+		pageSize?: string;
+	}>;
 };
 
-const CollectionDetailPage: FC<Props> = async ({ params: params, searchParams: searchParams }) => {
+const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 	const { database, collection } = await params;
 	const query = await searchParams;
+
+	// Pagination Parameter auslesen
+	const currentPage = query?.page ? parseInt(query.page) : 1;
+	const pageSize = query?.pageSize ? parseInt(query.pageSize) : 10;
 
 	if (!(await isDatabaseCollectionExisting(database, collection))) {
 		notFound();
 	}
 
 	const isReadonly = envBool('MONGONAUT_READONLY', false);
-
 	const stats = await getDatabaseCollectionStats(database, collection);
-	let contentArray: WithId<Document>[] = [];
 
+	// Content mit Pagination laden
+	let content;
 	if (query?.key && query?.value) {
-		const key = query['key'];
-		const value = query['value'];
-
-		contentArray = await searchInCollection(database, collection, key, value);
+		content = await searchInCollection(
+			database,
+			collection,
+			query.key,
+			query.value,
+			currentPage,
+			pageSize,
+		);
 	} else {
-		const content = await getDatabaseCollectionContent(database, collection);
-		contentArray = await content.find().toArray();
+		content = await getDatabaseCollectionContent(database, collection, currentPage, pageSize);
 	}
 
 	return (
@@ -75,17 +88,21 @@ const CollectionDetailPage: FC<Props> = async ({ params: params, searchParams: s
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
 				<div className="flex flex-col gap-4 lg:col-span-2 w-full">
-					<Searchbar
-						defaultKey={query ? query['key'] : undefined}
-						defaultValue={query ? query['value'] : undefined}
+					<Searchbar defaultKey={query?.key} defaultValue={query?.value} />
+
+					{content.documents.map((doc, index) => (
+						<DocumentView key={index} data={JSON.stringify(doc)} isReadonly={isReadonly} />
+					))}
+
+					<PaginationControls
+						currentPage={currentPage}
+						totalPages={content.pagination.totalPages}
+						pageSize={content.pagination.pageSize}
+						total={content.pagination.total}
+						query={query}
 					/>
-
-					{contentArray.map((doc, index) => {
-						const plain = JSON.stringify(doc);
-
-						return <DocumentView key={index} data={plain} isReadonly={isReadonly} />;
-					})}
 				</div>
+
 				<div>
 					<div className="border rounded-lg p-4 grid gap-2 sticky top-4">
 						<p className="text-lg font-semibold">Collection information</p>
