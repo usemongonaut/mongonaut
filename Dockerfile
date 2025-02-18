@@ -3,8 +3,8 @@ FROM node:18-alpine3.16 AS build
 WORKDIR /dockerbuild
 COPY . .
 
-RUN yarn install \
-    && yarn build \
+RUN npm install \
+    && npm run build \
     && rm -rf /dockerbuild/lib/scripts
 
 FROM node:18-alpine3.16
@@ -23,4 +23,4 @@ RUN apk -U add --no-cache \
 
 EXPOSE 8081
 
-CMD ["/sbin/tini", "--", "yarn", "start"]
+CMD ["/sbin/tini", "--", "npm", "start"]
