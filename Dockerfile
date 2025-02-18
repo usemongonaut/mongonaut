@@ -19,7 +19,7 @@ COPY --from=build /dockerbuild/* /opt/mongonaut/
 RUN apk -U add --no-cache \
         bash=5.1.16-r2 \
         tini=0.19.0-r0 \
-    && yarn workspaces focus --production
+    && npm workspaces focus --production
 
 EXPOSE 8081
 
