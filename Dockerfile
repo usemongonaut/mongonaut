@@ -1,4 +1,4 @@
-FROM node:18-alpine3.16 AS build
+FROM node:20-alpine3.16 AS build
 
 WORKDIR /dockerbuild
 COPY . .
@@ -7,7 +7,7 @@ RUN npm install \
     && npm run build \
     && rm -rf /dockerbuild/lib/scripts
 
-FROM node:18-alpine3.16
+FROM node:20-alpine3.16
 
 ENV MONGO_CONNECTION_URL="mongodb://mongo:27017"
 ENV MONGONAUT_READONLY="true"
