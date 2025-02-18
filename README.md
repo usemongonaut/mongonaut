@@ -12,7 +12,7 @@ Mongonaut is a lightweight and easy-to-use MongoDB web-service to manage your Mo
 
 > 🚧 Work in Progress! Mongonaut is currently Read-Only Mode only. Editing documents will follow with future updates.
 
-![Screenshot](https://i.imgur.com/0T9aNSg.png)
+![Screenshot](https://github.com/user-attachments/assets/d36bca71-285e-4df6-a4ea-43531c9dbfde)
 
 ## Installation and Securing
 
