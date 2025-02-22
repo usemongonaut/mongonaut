@@ -1,13 +1,13 @@
 export class MongoConnectionError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'MongoConnectionError';
-    }
+	constructor(message: string) {
+		super(message);
+		this.name = 'MongoConnectionError';
+	}
 }
 
 export class MongoQueryError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'MongoQueryError';
-    }
+	constructor(message: string) {
+		super(message);
+		this.name = 'MongoQueryError';
+	}
 }
