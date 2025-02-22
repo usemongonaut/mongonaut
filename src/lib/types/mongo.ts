@@ -5,7 +5,7 @@ export interface MongoServerInfo {
 	pid: number;
 	uptime: number;
 	port?: number;
-  }
+}
 
 export interface Collection {
 	name: string;
