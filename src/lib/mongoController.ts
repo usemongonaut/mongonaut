@@ -1,26 +1,77 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, MongoError } from 'mongodb';
 import { CollectionStats, DatabaseStats } from '@/lib/types/mongo';
-import { env } from '@/lib/env';
+import { env, envInt } from '@/lib/env';
+import { MongoConnectionError } from '@/lib/errors/mongo';
 
 export class MongoController {
 	readonly client: MongoClient;
+	private connected: boolean = false;
+	private readonly TIMEOUT = envInt('MONGONAUT_TIMEOUT', 5000);
 
 	constructor() {
-		this.client = new MongoClient(env('MONGO_CONNECTION_URL', 'mongodb://localhost:27017'));
+		this.client = new MongoClient(env('MONGO_CONNECTION_URL', 'mongodb://localhost:27017'), {
+			serverSelectionTimeoutMS: this.TIMEOUT,
+			connectTimeoutMS: this.TIMEOUT,
+		});
+	}
+
+	private async connect() {
+		if (this.connected) return;
+
+		try {
+			await Promise.race([
+				this.client.connect(),
+				new Promise((_, reject) =>
+					setTimeout(() => reject(new MongoConnectionError('Connection timeout')), this.TIMEOUT),
+				),
+			]);
+			this.connected = true;
+		} catch (error) {
+			this.connected = false;
+			if (error instanceof MongoError) {
+				switch (error.code) {
+					case 18:
+						throw new MongoConnectionError('Invalid credentials');
+					case 93:
+						throw new MongoConnectionError('Invalid connection URL');
+					default:
+						throw new MongoConnectionError(`Connection error: ${error.message}`);
+				}
+			}
+			if (error instanceof Error) {
+				if (error.message.includes('ECONNREFUSED')) {
+					throw new MongoConnectionError('MongoDB server is not running');
+				}
+				if (error.message.includes('timeout')) {
+					throw new MongoConnectionError('Connection timed out');
+				}
+			}
+			throw new MongoConnectionError('Failed to connect to MongoDB');
+		}
 	}
 
 	// SERVER
 	public async getServerInfo() {
-		await this.client.connect();
-		const adminDb = this.client.db().admin();
-		return adminDb.serverInfo();
+		try {
+			await this.connect();
+			const adminDb = this.client.db().admin();
+			return await adminDb.serverInfo();
+		} catch (error) {
+			this.connected = false;
+			throw error;
+		}
 	}
 
 	// DATABASE
 	public async listDatabases() {
-		await this.client.connect();
-		const adminDb = this.client.db().admin();
-		return adminDb.listDatabases();
+		try {
+			await this.connect();
+			const adminDb = this.client.db().admin();
+			return await adminDb.listDatabases();
+		} catch (error) {
+			this.connected = false;
+			throw error;
+		}
 	}
 
 	public async getDatabaseStats(dbName: string): Promise<DatabaseStats> {

@@ -3,15 +3,14 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import React from 'react';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/custom/app-sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import {
 	collectSidebarDatabaseInformation,
 	getServerInfo,
 	listDatabases,
 } from '@/actions/databaseOperation';
 import Providers from '@/app/providers';
-import { envBool } from '@/lib/env';
+import { DatabaseContent } from '@/components/custom/database-content';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -28,14 +27,25 @@ export const metadata: Metadata = {
 	description: 'Mongonaut is a lightweight easy-to-use MongoDB UI for the web.',
 };
 
-export default async function RootLayout({
-	children,
-}: Readonly<{
+interface RootLayoutProps {
 	children: React.ReactNode;
-}>) {
-	const serverInfo = await getServerInfo();
-	const { totalSize } = await listDatabases();
-	const collectedDbInfo = await collectSidebarDatabaseInformation();
+}
+
+export default async function RootLayout({ children }: Readonly<RootLayoutProps>) {
+	let databases;
+	let dbList;
+	let serverInfo;
+	let error;
+
+	try {
+		[databases, dbList, serverInfo] = await Promise.all([
+			collectSidebarDatabaseInformation(),
+			listDatabases(),
+			getServerInfo(),
+		]);
+	} catch (e) {
+		error = e as Error;
+	}
 
 	return (
 		<html lang="en" className="w-full h-full" suppressHydrationWarning>
@@ -48,15 +58,14 @@ export default async function RootLayout({
 							} as React.CSSProperties
 						}
 					>
-						<AppSidebar
-							readOnly={envBool('MONGONAUT_READONLY', false)}
-							databases={collectedDbInfo}
-							totalSize={totalSize}
+						<DatabaseContent
+							databases={databases}
+							totalSize={dbList?.totalSize}
 							serverInfo={serverInfo}
-						/>
-						<SidebarInset>
-							<main className="min-h-screen w-full">{children}</main>
-						</SidebarInset>
+							error={error}
+						>
+							{children}
+						</DatabaseContent>
 					</SidebarProvider>
 				</Providers>
 			</body>

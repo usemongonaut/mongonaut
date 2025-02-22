@@ -1,0 +1,41 @@
+import { ReactNode } from 'react';
+import type { Document } from 'mongodb';
+import { ConnectionError } from '@/components/error/connection-error';
+import { AppSidebar } from '@/components/custom/app-sidebar';
+import { envBool } from '@/lib/env';
+import { SidebarInset } from '@/components/ui/sidebar';
+import type { Database } from '@/lib/types/mongo';
+
+interface DatabaseContentProps {
+	databases: Database[] | undefined;
+	totalSize?: number;
+	serverInfo?: Document;
+	children: ReactNode;
+	error?: Error;
+}
+
+export function DatabaseContent({
+	databases,
+	totalSize,
+	serverInfo,
+	children,
+	error,
+}: DatabaseContentProps) {
+	if (error) {
+		return <ConnectionError error={error} />;
+	}
+
+	return (
+		<>
+			<AppSidebar
+				readOnly={envBool('MONGONAUT_READONLY', false)}
+				databases={databases || []}
+				totalSize={totalSize}
+				serverInfo={serverInfo}
+			/>
+			<SidebarInset>
+				<main className="min-h-screen w-full">{children}</main>
+			</SidebarInset>
+		</>
+	);
+}
