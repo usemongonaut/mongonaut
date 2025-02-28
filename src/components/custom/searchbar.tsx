@@ -35,9 +35,11 @@ export default function Searchbar(props: Props) {
 			<div className="flex gap-2">
 				<Button
 					variant={'ghost'}
+					type="button"
 					onClick={() => {
 						setKey(undefined);
 						setSearchValue(undefined);
+						router.push(window.location.pathname);
 					}}
 				>
 					{key && searchValue ? (
