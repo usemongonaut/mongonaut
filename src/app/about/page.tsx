@@ -28,7 +28,7 @@ export default function Home() {
 						</Button>
 					</div>
 
-					<div className="bg-gradient-to-br w-full from-purple-500/5 via-background to-blue-500/5 rounded-lg border p-6">
+					<div className="bg-linear-to-br w-full from-purple-500/5 via-background to-blue-500/5 rounded-lg border p-6">
 						<div className="grid gap-6 w-full">
 							<div className="space-y-4">
 								<div className="flex items-center gap-2">
@@ -37,7 +37,7 @@ export default function Home() {
 								</div>
 								<div className="flex flex-wrap gap-2">
 									<a href="https://github.com/toohard2explain" target="_blank">
-										<div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border/50">
+										<div className="flex items-center gap-2 bg-background/50 backdrop-blur-xs px-3 py-1.5 rounded-full border border-border/50">
 											<img
 												src="https://avatars.githubusercontent.com/u/78054244?v=4"
 												className="w-6 h-6 rounded-full"
@@ -46,7 +46,7 @@ export default function Home() {
 										</div>
 									</a>
 									<a href="https://github.com/maaaathis" target="_blank">
-										<div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border/50">
+										<div className="flex items-center gap-2 bg-background/50 backdrop-blur-xs px-3 py-1.5 rounded-full border border-border/50">
 											<img
 												src="https://avatars.githubusercontent.com/u/37186532?v=4"
 												className="w-6 h-6 rounded-full"
