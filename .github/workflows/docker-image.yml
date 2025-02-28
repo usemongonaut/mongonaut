@@ -1,27 +1,46 @@
-name: Docker Image CI
+name: Build & publish Docker image
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-  workflow_run:
-    workflows:
-      - formatting
-      - lint
-    types:
-      - completed
+    tags:
+      - 'v*'
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: extract_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Get commit author info
+        id: author
+        run: |
+          AUTHOR_NAME=$(git log -1 --format='%an' ${{ github.sha }})
+          AUTHOR_EMAIL=$(git log -1 --format='%ae' ${{ github.sha }})
+          echo "name=$AUTHOR_NAME" >> $GITHUB_OUTPUT
+          echo "email=$AUTHOR_EMAIL" >> $GITHUB_OUTPUT
+
+      - name: Update package.json version
+        run: |
+          npx json -I -f package.json -e "this.version='${{ steps.extract_version.outputs.VERSION }}'"
+
+      - name: Commit package.json changes
+        run: |
+          git config --local user.email "${{ steps.author.outputs.email }}"
+          git config --local user.name "${{ steps.author.outputs.name }}"
+          git add package.json
+          git commit -m "chore: update version to ${{ steps.extract_version.outputs.VERSION }}"
+          git push origin HEAD:master
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -41,14 +60,13 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
-            type=sha,format=short
+            type=raw,value=latest
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

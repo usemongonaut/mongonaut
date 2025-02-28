@@ -1,0 +1,22 @@
+name: Test Docker image build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_run:
+    workflows:
+      - formatting
+      - lint
+    types:
+      - completed
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag mongonaut:$(date +%s)
