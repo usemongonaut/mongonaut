@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { DatabaseIcon, TableIcon } from 'lucide-react';
+import { DatabaseIcon, FilterXIcon, TableIcon } from 'lucide-react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
 import { notFound } from 'next/navigation';
 import {
@@ -85,9 +85,21 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 				<div className={`flex flex-col gap-4 ${stats ? 'lg:col-span-2' : 'lg:col-span-3'} w-full`}>
 					<Searchbar defaultKey={query?.key} defaultValue={query?.value} />
 
-					{content?.documents.map((doc, index) => (
-						<DocumentView key={index} data={JSON.stringify(doc)} isReadonly={isReadonly} />
-					))}
+					{content?.documents.length > 0 ? (
+						content.documents.map((doc, index) => (
+							<DocumentView key={index} data={JSON.stringify(doc)} isReadonly={isReadonly} />
+						))
+					) : (
+						<div className="flex flex-col items-center justify-center py-10 text-center border rounded-lg">
+							<FilterXIcon className="w-12 h-12 mb-3 text-muted-foreground" />
+							<h3 className="mb-1 font-medium">No results found</h3>
+							<p className="text-sm text-muted-foreground">
+								{query?.key && query?.value
+									? `No documents found for ${query.key}: ${query.value}`
+									: 'This collection contains no documents'}
+							</p>
+						</div>
+					)}
 
 					<PaginationControls
 						currentPage={currentPage}
