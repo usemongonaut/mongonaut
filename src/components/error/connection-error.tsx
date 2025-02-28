@@ -34,7 +34,11 @@ export function ConnectionError({ error }: { error: Error }) {
 						</CardContent>
 					</Card>
 
-					<Button variant="default" className="w-full" onClick={() => window.location.reload()}>
+					<Button
+						variant="default"
+						className="w-full cursor-pointer"
+						onClick={() => window.location.reload()}
+					>
 						<RefreshCw className="mr-2 h-4 w-4" />
 						Try again
 					</Button>
