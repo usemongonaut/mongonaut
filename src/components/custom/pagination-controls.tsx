@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
 interface PaginationControlsProps {
@@ -17,6 +18,9 @@ export function PaginationControls({
 	total,
 	query,
 }: PaginationControlsProps) {
+	const router = useRouter();
+	const pathname = usePathname();
+
 	const handlePageChange = (newPage: number) => {
 		const urlParams = new URLSearchParams();
 		if (query) {
@@ -25,7 +29,8 @@ export function PaginationControls({
 			});
 		}
 		urlParams.set('page', newPage.toString());
-		window.location.search = urlParams.toString();
+
+		router.push(`${pathname}?${urlParams.toString()}`);
 	};
 
 	return (
