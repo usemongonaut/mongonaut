@@ -16,7 +16,10 @@ RUN npm install --include=dev --no-package-lock
 
 COPY . .
 
+ENV MONGO_CONNECTION_URL=mongodb://localhost:27017
 ENV MONGONAUT_READONLY=false
+ENV MONGONAUT_TIMEOUT=5000
+
 ENV NODE_ENV=production
 
 RUN npm run build
