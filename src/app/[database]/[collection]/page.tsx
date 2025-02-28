@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { DatabaseIcon, FilterXIcon, TableIcon } from 'lucide-react';
+import { BoxIcon, DatabaseIcon, FilterXIcon, HardDriveIcon, TableIcon } from 'lucide-react';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
 import { notFound } from 'next/navigation';
 import {
@@ -81,55 +81,56 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 				</BreadcrumbList>
 			</Breadcrumb>
 
-			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
-				<div className={`flex flex-col gap-4 ${stats ? 'lg:col-span-2' : 'lg:col-span-3'} w-full`}>
-					<Searchbar defaultKey={query?.key} defaultValue={query?.value} />
-
-					{content?.documents.length > 0 ? (
-						content.documents.map((doc, index) => (
-							<DocumentView key={index} data={JSON.stringify(doc)} isReadonly={isReadonly} />
-						))
-					) : (
-						<div className="flex flex-col items-center justify-center py-10 text-center border rounded-lg">
-							<FilterXIcon className="w-12 h-12 mb-3 text-muted-foreground" />
-							<h3 className="mb-1 font-medium">No results found</h3>
-							<p className="text-sm text-muted-foreground">
-								{query?.key && query?.value
-									? `No documents found for ${query.key}: ${query.value}`
-									: 'This collection contains no documents'}
-							</p>
-						</div>
-					)}
-
-					<PaginationControls
-						currentPage={currentPage}
-						totalPages={content?.pagination.totalPages || 0}
-						pageSize={content?.pagination.pageSize || 0}
-						total={content?.pagination.total || 0}
-						query={query}
-					/>
-				</div>
-
+			<div className="w-full h-full flex flex-col gap-4">
 				{stats && (
-					<div>
-						<div className="border rounded-lg p-4 grid gap-2 sticky top-4">
-							<p className="text-lg font-semibold">Collection information</p>
-
-							<div className="flex justify-between text-sm">
-								<div className="text-muted-foreground">
-									<p>Documents</p>
-									<p>Collection Size</p>
-									{stats.avgObjSize && <p>Avg. Object Size</p>}
-								</div>
-								<div>
-									<p>{stats.count}</p>
-									<p>{prettyBytes(stats.size)}</p>
-									{stats.avgObjSize && <p>{prettyBytes(stats.avgObjSize)}</p>}
-								</div>
-							</div>
+					<div className="w-full flex items-center gap-6 px-4 py-3 bg-muted/30 rounded-lg text-sm">
+						<div className="flex items-center gap-2">
+							<DatabaseIcon size={14} className="text-primary" />
+							<span className="text-muted-foreground">Documents:</span>
+							<span className="font-medium">{stats.count}</span>
 						</div>
+
+						<div className="flex items-center gap-2">
+							<HardDriveIcon size={14} className="text-primary" />
+							<span className="text-muted-foreground">Size:</span>
+							<span className="font-medium">{prettyBytes(stats.size)}</span>
+						</div>
+
+						{stats.avgObjSize && (
+							<div className="flex items-center gap-2">
+								<BoxIcon size={14} className="text-primary" />
+								<span className="text-muted-foreground">Avg. Size:</span>
+								<span className="font-medium">{prettyBytes(stats.avgObjSize)}</span>
+							</div>
+						)}
 					</div>
 				)}
+
+				<Searchbar defaultKey={query?.key} defaultValue={query?.value} />
+
+				{content?.documents.length > 0 ? (
+					content.documents.map((doc, index) => (
+						<DocumentView key={index} data={JSON.stringify(doc)} isReadonly={isReadonly} />
+					))
+				) : (
+					<div className="flex flex-col items-center justify-center py-10 text-center border rounded-lg">
+						<FilterXIcon className="w-12 h-12 mb-3 text-muted-foreground" />
+						<h3 className="mb-1 font-medium">No results found</h3>
+						<p className="text-sm text-muted-foreground">
+							{query?.key && query?.value
+								? `No documents found for ${query.key}: ${query.value}`
+								: 'This collection contains no documents'}
+						</p>
+					</div>
+				)}
+
+				<PaginationControls
+					currentPage={currentPage}
+					totalPages={content?.pagination.totalPages || 0}
+					pageSize={content?.pagination.pageSize || 0}
+					total={content?.pagination.total || 0}
+					query={query}
+				/>
 			</div>
 		</AppContainer>
 	);
