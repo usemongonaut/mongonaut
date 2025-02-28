@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 export function ConnectionError({ error }: { error: Error }) {
 	return (
 		<div className="flex-1 flex items-center justify-center">
-			<Card className="max-w-md mx-auto border-destructive/50">
+			<Card className="w-md mx-auto border-destructive/50">
 				<CardHeader>
 					<div className="flex items-center gap-2">
 						<AlertCircle className="h-5 w-5 text-destructive" />
