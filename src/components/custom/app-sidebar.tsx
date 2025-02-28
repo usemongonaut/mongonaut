@@ -1,11 +1,11 @@
 'use client';
 
-import { ChevronRightIcon, DatabaseIcon, SearchIcon, SlashIcon, TableIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
-import { Document } from 'mongodb';
+import { ChevronRightIcon, DatabaseIcon, SearchIcon, SlashIcon, TableIcon } from 'lucide-react';
+import type { Document } from 'mongodb';
 import { redirect } from 'next/navigation';
 import {
 	Sidebar,
@@ -18,24 +18,29 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	SidebarMenuSkeleton,
 	SidebarMenuSub,
 } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { SettingsButton } from '@/components/custom/settings-button';
-import { Database } from '@/lib/types/mongo';
+import type { Database } from '@/lib/types/mongo';
+
+interface AppSidebarProps {
+	databases: Database[];
+	totalSize?: number;
+	serverInfo?: Document;
+	readOnly?: boolean;
+	loading?: boolean;
+}
 
 export function AppSidebar({
 	databases,
 	totalSize,
 	serverInfo,
 	readOnly,
-}: {
-	databases: Database[];
-	totalSize?: number;
-	serverInfo?: Document;
-	readOnly?: boolean;
-}) {
+	loading = false,
+}: AppSidebarProps) {
 	const [search, setSearch] = useState('');
 	const [openedTables, setOpenedTables] = useState<string[]>([]);
 
@@ -84,13 +89,19 @@ export function AppSidebar({
 					<SidebarGroupLabel>Databases</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
-							{filteredDatabases.length > 0 ? (
+							{loading ? (
+								<>
+									<SidebarMenuSkeleton showIcon />
+									<SidebarMenuSkeleton showIcon />
+									<SidebarMenuSkeleton showIcon />
+								</>
+							) : filteredDatabases.length > 0 ? (
 								filteredDatabases.map((database, index) => (
 									<CollapsibleDatabaseSidebarItem
-										open={isTableOpen(database.name) || search.trim().length > 0}
 										key={index}
 										database={database}
 										search={search}
+										open={isTableOpen(database.name) || search.trim().length > 0}
 										onOpenChange={() => toggleTable(database.name)}
 									/>
 								))

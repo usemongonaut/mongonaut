@@ -46,7 +46,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
 		if (this.state.error) {
 			return (
 				<div className="flex-1 flex items-center justify-center min-h-screen">
-					<Card className="max-w-md mx-auto border-destructive/50">
+					<Card className="w-md mx-auto border-destructive/50">
 						<CardHeader>
 							<div className="flex items-center gap-2">
 								<AlertCircle className="h-5 w-5 text-destructive" />

@@ -37,7 +37,6 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 	const { database, collection } = await params;
 	const query = await searchParams;
 
-	// Pagination Parameter auslesen
 	const currentPage = query?.page ? parseInt(query.page) : 1;
 	const pageSize = query?.pageSize ? parseInt(query.pageSize) : 10;
 
@@ -48,7 +47,6 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 	const isReadonly = envBool('MONGONAUT_READONLY', false);
 	const stats = await getDatabaseCollectionStats(database, collection);
 
-	// Content mit Pagination laden
 	let content;
 	if (query?.key && query?.value) {
 		content = await searchInCollection(
@@ -87,37 +85,39 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 				<div className="flex flex-col gap-4 lg:col-span-2 w-full">
 					<Searchbar defaultKey={query?.key} defaultValue={query?.value} />
 
-					{content.documents.map((doc, index) => (
+					{content?.documents.map((doc, index) => (
 						<DocumentView key={index} data={JSON.stringify(doc)} isReadonly={isReadonly} />
 					))}
 
 					<PaginationControls
 						currentPage={currentPage}
-						totalPages={content.pagination.totalPages}
-						pageSize={content.pagination.pageSize}
-						total={content.pagination.total}
+						totalPages={content?.pagination.totalPages || 0}
+						pageSize={content?.pagination.pageSize || 0}
+						total={content?.pagination.total || 0}
 						query={query}
 					/>
 				</div>
 
-				<div>
-					<div className="border rounded-lg p-4 grid gap-2 sticky top-4">
-						<p className="text-lg font-semibold">Collection information</p>
+				{stats && (
+					<div>
+						<div className="border rounded-lg p-4 grid gap-2 sticky top-4">
+							<p className="text-lg font-semibold">Collection information</p>
 
-						<div className="flex justify-between text-sm">
-							<div className="text-muted-foreground">
-								<p>Documents</p>
-								<p>Collection Size</p>
-								{stats.avgObjSize && <p>Avg. Object Size</p>}
-							</div>
-							<div>
-								<p>{stats.count}</p>
-								<p>{prettyBytes(stats.size)}</p>
-								{stats.avgObjSize && <p>{prettyBytes(stats.avgObjSize)}</p>}
+							<div className="flex justify-between text-sm">
+								<div className="text-muted-foreground">
+									<p>Documents</p>
+									<p>Collection Size</p>
+									{stats.avgObjSize && <p>Avg. Object Size</p>}
+								</div>
+								<div>
+									<p>{stats.count}</p>
+									<p>{prettyBytes(stats.size)}</p>
+									{stats.avgObjSize && <p>{prettyBytes(stats.avgObjSize)}</p>}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				)}
 			</div>
 		</AppContainer>
 	);

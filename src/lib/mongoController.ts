@@ -16,7 +16,7 @@ export class MongoController {
 	}
 
 	private async connect() {
-		if (this.connected) return;
+		if (this.connected) return { success: true };
 
 		try {
 			await Promise.race([
@@ -26,64 +26,125 @@ export class MongoController {
 				),
 			]);
 			this.connected = true;
+			return { success: true };
 		} catch (error) {
 			this.connected = false;
 			if (error instanceof MongoError) {
 				switch (error.code) {
 					case 18:
-						throw new MongoConnectionError('Invalid credentials');
+						return {
+							success: false,
+							error: new MongoConnectionError('Invalid credentials'),
+						};
 					case 93:
-						throw new MongoConnectionError('Invalid connection URL');
+						return {
+							success: false,
+							error: new MongoConnectionError('Invalid connection URL'),
+						};
 					default:
-						throw new MongoConnectionError(`Connection error: ${error.message}`);
+						return {
+							success: false,
+							error: new MongoConnectionError(`Connection error: ${error.message}`),
+						};
 				}
 			}
 			if (error instanceof Error) {
 				if (error.message.includes('ECONNREFUSED')) {
-					throw new MongoConnectionError('MongoDB server is not running');
+					return {
+						success: false,
+						error: new MongoConnectionError('MongoDB server is not running'),
+					};
 				}
 				if (error.message.includes('timeout')) {
-					throw new MongoConnectionError('Connection timed out');
+					return {
+						success: false,
+						error: new MongoConnectionError('Connection timed out'),
+					};
 				}
 			}
-			throw new MongoConnectionError('Failed to connect to MongoDB');
+			return {
+				success: false,
+				error: new MongoConnectionError('Failed to connect to MongoDB'),
+			};
 		}
 	}
 
 	// SERVER
 	public async getServerInfo() {
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error };
+		}
+
 		try {
-			await this.connect();
 			const adminDb = this.client.db().admin();
-			return await adminDb.serverInfo();
+			const serverInfo = await adminDb.serverInfo();
+			return { success: true, data: serverInfo };
 		} catch (error) {
 			this.connected = false;
-			throw error;
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+			};
 		}
 	}
 
 	// DATABASE
 	public async listDatabases() {
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error };
+		}
+
 		try {
-			await this.connect();
 			const adminDb = this.client.db().admin();
-			return await adminDb.listDatabases();
+			const databases = await adminDb.listDatabases();
+			return { success: true, data: databases };
 		} catch (error) {
 			this.connected = false;
-			throw error;
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+			};
 		}
 	}
 
-	public async getDatabaseStats(dbName: string): Promise<DatabaseStats> {
-		await this.client.connect();
-		const db = this.client.db(dbName);
-		return (await db.command({ dbStats: 1 })) as DatabaseStats;
+	public async getDatabaseStats(dbName: string) {
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error };
+		}
+
+		try {
+			const db = this.client.db(dbName);
+			const stats = (await db.command({ dbStats: 1 })) as DatabaseStats;
+			return { success: true, data: stats };
+		} catch (error) {
+			this.connected = false;
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+			};
+		}
 	}
 
 	// COLLECTION
 	public async getDatabaseCollections(name: string) {
-		await this.client.connect();
-		return this.client.db(name).listCollections();
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error };
+		}
+
+		try {
+			const collections = await this.client.db(name).listCollections();
+			return { success: true, data: collections };
+		} catch (error) {
+			this.connected = false;
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+			};
+		}
 	}
 
 	public async getCollectionContent(
@@ -92,7 +153,21 @@ export class MongoController {
 		page: number = 1,
 		pageSize: number = 10,
 	) {
-		await this.client.connect();
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return {
+				success: false,
+				error: connectResult.error,
+				documents: [],
+				pagination: {
+					total: 0,
+					page: 1,
+					pageSize,
+					totalPages: 0,
+				},
+			};
+		}
+
 		const db = this.client.db(dbName);
 		const collection = db.collection(collectionName);
 
@@ -100,10 +175,10 @@ export class MongoController {
 
 		try {
 			const total = await collection.countDocuments();
-
 			const documents = await collection.find().skip(skip).limit(pageSize).toArray();
 
 			return {
+				success: true,
 				documents,
 				pagination: {
 					total,
@@ -115,11 +190,13 @@ export class MongoController {
 		} catch (error) {
 			console.error('Error fetching collection content:', error);
 			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
 				documents: [],
 				pagination: {
 					total: 0,
 					page: 1,
-					pageSize: pageSize,
+					pageSize,
 					totalPages: 0,
 				},
 			};
@@ -134,7 +211,21 @@ export class MongoController {
 		page: number = 1,
 		pageSize: number = 10,
 	) {
-		await this.client.connect();
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return {
+				success: false,
+				error: connectResult.error,
+				documents: [],
+				pagination: {
+					total: 0,
+					page: 1,
+					pageSize,
+					totalPages: 0,
+				},
+			};
+		}
+
 		const db = this.client.db(dbName);
 		const collection = db.collection(collectionName);
 
@@ -152,6 +243,7 @@ export class MongoController {
 			const documents = await collection.find(query).skip(skip).limit(pageSize).toArray();
 
 			return {
+				success: true,
 				documents,
 				pagination: {
 					total,
@@ -163,11 +255,13 @@ export class MongoController {
 		} catch (error) {
 			console.error('Error in collection search:', error);
 			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
 				documents: [],
 				pagination: {
 					total: 0,
 					page: 1,
-					pageSize: pageSize,
+					pageSize,
 					totalPages: 0,
 				},
 			};
@@ -175,18 +269,42 @@ export class MongoController {
 	}
 
 	public async isCollectionExisting(dbName: string, collectionName: string) {
-		await this.client.connect();
-		const db = this.client.db(dbName);
-		const collections = await db.listCollections().toArray();
-		return collections.some(col => col.name === collectionName);
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error, exists: false };
+		}
+
+		try {
+			const db = this.client.db(dbName);
+			const collections = await db.listCollections().toArray();
+			const exists = collections.some(col => col.name === collectionName);
+			return { success: true, exists };
+		} catch (error) {
+			this.connected = false;
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+				exists: false,
+			};
+		}
 	}
 
-	public async getCollectionStats(
-		dbName: string,
-		collectionName: string,
-	): Promise<CollectionStats> {
-		await this.client.connect();
-		const db = this.client.db(dbName);
-		return (await db.command({ collStats: collectionName })) as CollectionStats;
+	public async getCollectionStats(dbName: string, collectionName: string) {
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error };
+		}
+
+		try {
+			const db = this.client.db(dbName);
+			const stats = (await db.command({ collStats: collectionName })) as CollectionStats;
+			return { success: true, data: stats };
+		} catch (error) {
+			this.connected = false;
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+			};
+		}
 	}
 }

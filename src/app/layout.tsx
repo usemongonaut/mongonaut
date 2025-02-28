@@ -4,13 +4,8 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import React from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import {
-	collectSidebarDatabaseInformation,
-	getServerInfo,
-	listDatabases,
-} from '@/actions/databaseOperation';
 import Providers from '@/app/providers';
-import { DatabaseContent } from '@/components/custom/database-content';
+import { DatabaseFetcher } from '@/components/custom/database-fetcher';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -32,21 +27,6 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: Readonly<RootLayoutProps>) {
-	let databases;
-	let dbList;
-	let serverInfo;
-	let error;
-
-	try {
-		[databases, dbList, serverInfo] = await Promise.all([
-			collectSidebarDatabaseInformation(),
-			listDatabases(),
-			getServerInfo(),
-		]);
-	} catch (e) {
-		error = e as Error;
-	}
-
 	return (
 		<html lang="en" className="w-full h-full" suppressHydrationWarning>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full`}>
@@ -58,14 +38,7 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
 							} as React.CSSProperties
 						}
 					>
-						<DatabaseContent
-							databases={databases}
-							totalSize={dbList?.totalSize}
-							serverInfo={serverInfo}
-							error={error}
-						>
-							{children}
-						</DatabaseContent>
+						<DatabaseFetcher>{children}</DatabaseFetcher>
 					</SidebarProvider>
 				</Providers>
 			</body>

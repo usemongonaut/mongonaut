@@ -7,11 +7,12 @@ import { SidebarInset } from '@/components/ui/sidebar';
 import type { Database } from '@/lib/types/mongo';
 
 interface DatabaseContentProps {
-	databases: Database[] | undefined;
+	databases: Database[];
 	totalSize?: number;
 	serverInfo?: Document;
 	children: ReactNode;
 	error?: Error;
+	loading?: boolean;
 }
 
 export function DatabaseContent({
@@ -20,6 +21,7 @@ export function DatabaseContent({
 	serverInfo,
 	children,
 	error,
+	loading = false,
 }: DatabaseContentProps) {
 	if (error) {
 		return <ConnectionError error={error} />;
@@ -29,9 +31,10 @@ export function DatabaseContent({
 		<>
 			<AppSidebar
 				readOnly={envBool('MONGONAUT_READONLY', false)}
-				databases={databases || []}
+				databases={databases}
 				totalSize={totalSize}
 				serverInfo={serverInfo}
+				loading={loading}
 			/>
 			<SidebarInset>
 				<main className="min-h-screen w-full">{children}</main>
