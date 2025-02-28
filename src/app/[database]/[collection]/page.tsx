@@ -38,7 +38,7 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 	const query = await searchParams;
 
 	const currentPage = query?.page ? parseInt(query.page) : 1;
-	const pageSize = query?.pageSize ? parseInt(query.pageSize) : 10;
+	const pageSize = query?.pageSize ? parseInt(query.pageSize) : 20;
 
 	if (!(await isDatabaseCollectionExisting(database, collection))) {
 		notFound();
