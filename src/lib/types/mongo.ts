@@ -1,3 +1,12 @@
+export interface MongoServerInfo {
+	version: string;
+	host: string;
+	process: string;
+	pid: number;
+	uptime: number;
+	port?: number;
+}
+
 export interface Collection {
 	name: string;
 	totalSize: number;
