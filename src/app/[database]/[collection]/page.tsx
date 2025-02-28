@@ -82,7 +82,7 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 			</Breadcrumb>
 
 			<div className="w-full h-full grid lg:grid-cols-3 gap-4">
-				<div className="flex flex-col gap-4 lg:col-span-2 w-full">
+				<div className={`flex flex-col gap-4 ${stats ? 'lg:col-span-2' : 'lg:col-span-3'} w-full`}>
 					<Searchbar defaultKey={query?.key} defaultValue={query?.value} />
 
 					{content?.documents.map((doc, index) => (
