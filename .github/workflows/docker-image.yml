@@ -32,7 +32,8 @@ jobs:
 
       - name: Update package.json version
         run: |
-          npx json -I -f package.json -e "this.version='${{ steps.extract_version.outputs.VERSION }}'"
+          jq --indent 1 '.version = "${{ steps.extract_version.outputs.VERSION }}"' package.json > package.json.tmp
+          mv package.json.tmp package.json
 
       - name: Commit package.json changes
         run: |
