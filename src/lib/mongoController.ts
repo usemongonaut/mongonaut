@@ -229,12 +229,25 @@ export class MongoController {
 		const db = this.client.db(dbName);
 		const collection = db.collection(collectionName);
 
-		const query = {
-			[searchKey]: {
-				$regex: searchValue,
-				$options: 'i',
-			},
-		};
+		const formattedKey = searchKey.replace(/_/g, '.');
+
+		let query;
+
+		const numberValue = Number(searchValue);
+		if (!isNaN(numberValue)) {
+			query = { [formattedKey]: numberValue };
+		} else if (searchValue.toLowerCase() === 'true') {
+			query = { [formattedKey]: true };
+		} else if (searchValue.toLowerCase() === 'false') {
+			query = { [formattedKey]: false };
+		} else {
+			query = {
+				[formattedKey]: {
+					$regex: searchValue,
+					$options: 'i',
+				},
+			};
+		}
 
 		const skip = (page - 1) * pageSize;
 
