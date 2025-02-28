@@ -41,6 +41,7 @@ export default function Home() {
 											<img
 												src="https://avatars.githubusercontent.com/u/78054244?v=4"
 												className="w-6 h-6 rounded-full"
+												alt=""
 											/>
 											<span className="text-sm">Levi H</span>
 										</div>
@@ -50,6 +51,7 @@ export default function Home() {
 											<img
 												src="https://avatars.githubusercontent.com/u/37186532?v=4"
 												className="w-6 h-6 rounded-full"
+												alt=""
 											/>
 											<span className="text-sm">maaaathis</span>
 										</div>
