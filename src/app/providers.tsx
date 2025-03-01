@@ -3,6 +3,7 @@
 import { ThemeProvider } from 'next-themes';
 import type { FC, ReactElement, ReactNode } from 'react';
 import { GlobalErrorBoundary } from '@/components/error/error-boundary';
+import { Toaster } from '@/components/ui/sonner';
 
 type ProvidersProps = {
 	children: ReactNode;
@@ -10,7 +11,10 @@ type ProvidersProps = {
 
 const Providers: FC<ProvidersProps> = ({ children }): ReactElement => (
 	<GlobalErrorBoundary>
-		<ThemeProvider attribute="class">{children}</ThemeProvider>
+		<ThemeProvider attribute="class">
+			{children}
+			<Toaster richColors />
+		</ThemeProvider>
 	</GlobalErrorBoundary>
 );
 

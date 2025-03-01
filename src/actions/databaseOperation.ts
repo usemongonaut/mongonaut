@@ -135,3 +135,13 @@ export const searchInCollection = async (
 		pagination: result.pagination,
 	};
 };
+
+export const deleteDocument = async (database: string, collection: string, documentId: string) => {
+	const result = await mongo.deleteDocument(database, collection, documentId);
+
+	return {
+		success: result.success,
+		deleted: result.deleted || false,
+		error: result.error,
+	};
+};
