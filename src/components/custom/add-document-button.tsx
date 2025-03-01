@@ -90,6 +90,7 @@ export function AddDocumentButton() {
 							extensions={[json()]}
 							onChange={value => setJsonInput(value)}
 							theme={vscodeDark}
+							selection={{ anchor: 2, head: 2 }}
 							basicSetup={{
 								lineNumbers: true,
 								highlightActiveLine: true,
