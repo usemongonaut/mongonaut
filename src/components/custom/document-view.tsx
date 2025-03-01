@@ -147,10 +147,10 @@ export function DocumentView({ data, isReadonly }: { data: string; isReadonly: b
 	return (
 		<div className="border rounded-lg relative overflow-hidden w-full">
 			{!isReadonly && (
-				<div className="absolute top-2 right-2 z-10 flex gap-2">
+				<div className="absolute top-2 right-2 z-10 flex gap-1">
 					<Button
 						variant="ghost"
-						size="sm"
+						size="icon"
 						onClick={handleSave}
 						disabled={isSaving || !hasChanges}
 						className="text-muted-foreground hover:text-primary cursor-pointer"
@@ -159,7 +159,7 @@ export function DocumentView({ data, isReadonly }: { data: string; isReadonly: b
 					</Button>
 					<Button
 						variant="ghost"
-						size="sm"
+						size="icon"
 						onClick={() => setShowDeleteDialog(true)}
 						disabled={isDeleting}
 						className="text-muted-foreground hover:text-destructive cursor-pointer"
