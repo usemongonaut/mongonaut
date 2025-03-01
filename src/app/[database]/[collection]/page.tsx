@@ -20,6 +20,7 @@ import { envBool } from '@/lib/env';
 import { DocumentView } from '@/components/custom/document-view';
 import Searchbar from '@/components/custom/searchbar';
 import { PaginationControls } from '@/components/custom/pagination-controls';
+import { AddDocumentButton } from '@/components/custom/add-document-button';
 
 type Props = {
 	params: Promise<{
@@ -109,6 +110,8 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 				)}
 
 				<Searchbar defaultKey={query?.key} defaultValue={query?.value} />
+
+				{!isReadonly && <AddDocumentButton />}
 
 				{content?.documents.length > 0 ? (
 					content.documents.map((doc, index) => (

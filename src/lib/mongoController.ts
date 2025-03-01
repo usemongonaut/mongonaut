@@ -322,6 +322,30 @@ export class MongoController {
 	}
 
 	// DOCUMENT
+	public async addDocument(dbName: string, collectionName: string, document: JSON) {
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error };
+		}
+
+		try {
+			const db = this.client.db(dbName);
+			const collection = db.collection(collectionName);
+			const result = await collection.insertOne(document);
+
+			return {
+				success: true,
+				insertedId: result.insertedId,
+			};
+		} catch (error) {
+			this.connected = false;
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+			};
+		}
+	}
+
 	public async deleteDocument(dbName: string, collectionName: string, documentId: string) {
 		const connectResult = await this.connect();
 		if (!connectResult.success) {

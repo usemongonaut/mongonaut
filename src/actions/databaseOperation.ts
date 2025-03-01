@@ -145,3 +145,22 @@ export const deleteDocument = async (database: string, collection: string, docum
 		error: result.error,
 	};
 };
+
+export const addDocument = async (database: string, collection: string, documentJson: string) => {
+	try {
+		const document = JSON.parse(documentJson);
+		const result = await mongo.addDocument(database, collection, document);
+
+		return {
+			success: result.success,
+			insertedId: result.insertedId || null,
+			error: result.error,
+		};
+	} catch (error) {
+		return {
+			success: false,
+			insertedId: null,
+			error: error instanceof Error ? error : new Error('Invalid JSON'),
+		};
+	}
+};
