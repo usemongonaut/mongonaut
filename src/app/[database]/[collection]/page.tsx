@@ -63,23 +63,25 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 
 	return (
 		<AppContainer>
-			<Breadcrumb>
-				<BreadcrumbList>
-					<BreadcrumbItem>
-						<BreadcrumbPage className="flex gap-2">
-							<DatabaseIcon size={12} className="text-muted-foreground my-auto" />
-							{database}
-						</BreadcrumbPage>
-					</BreadcrumbItem>
-					<BreadcrumbSeparator />
-					<BreadcrumbItem>
-						<BreadcrumbPage className="flex gap-2">
-							<TableIcon size={12} className="text-muted-foreground my-auto" />
-							{collection}
-						</BreadcrumbPage>
-					</BreadcrumbItem>
-				</BreadcrumbList>
-			</Breadcrumb>
+			<div className="hidden md:block">
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbPage className="flex gap-2">
+								<DatabaseIcon size={12} className="text-muted-foreground my-auto" />
+								{database}
+							</BreadcrumbPage>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage className="flex gap-2">
+								<TableIcon size={12} className="text-muted-foreground my-auto" />
+								{collection}
+							</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</div>
 
 			<div className="w-full h-full flex flex-col gap-4">
 				{stats && (
