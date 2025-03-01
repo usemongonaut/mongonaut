@@ -35,6 +35,7 @@ export function ClientJsonEditor(props: JsonEditorProps) {
 				copy: <ClipboardCopy size={14} />,
 			}}
 			showArrayIndices={true}
+			maxWidth="100%"
 			{...props}
 		/>
 	);
