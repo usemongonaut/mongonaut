@@ -1,5 +1,5 @@
 import { MongoClient, MongoError, ObjectId } from 'mongodb';
-import { CollectionStats, DatabaseStats } from '@/lib/types/mongo';
+import { CollectionStats, DatabaseStats, MongoDocument } from '@/lib/types/mongo';
 import { env, envInt } from '@/lib/env';
 import { MongoConnectionError } from '@/lib/errors/mongo';
 
@@ -342,6 +342,47 @@ export class MongoController {
 			return {
 				success: false,
 				error: error instanceof Error ? error : new Error('Unknown error'),
+			};
+		}
+	}
+
+	public async updateDocument(
+		dbName: string,
+		collectionName: string,
+		documentId: string,
+		updatedDocument: MongoDocument,
+	) {
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error, updated: false };
+		}
+
+		try {
+			const db = this.client.db(dbName);
+			const collection = db.collection(collectionName);
+
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { _id, ...documentWithoutId } = updatedDocument;
+
+			let query = {};
+			if (/^[0-9a-fA-F]{24}$/.test(documentId)) {
+				query = { _id: new ObjectId(documentId) };
+			} else {
+				query = { _id: documentId };
+			}
+
+			const result = await collection.updateOne(query, { $set: documentWithoutId });
+
+			return {
+				success: true,
+				updated: result.modifiedCount > 0,
+			};
+		} catch (error) {
+			this.connected = false;
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+				updated: false,
 			};
 		}
 	}

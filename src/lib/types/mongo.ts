@@ -42,3 +42,8 @@ export interface DatabaseStats {
 	fsTotalSize: number;
 	ok: number;
 }
+
+export interface MongoDocument {
+	_id: string | { $oid: string };
+	[key: string]: unknown;
+}

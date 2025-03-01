@@ -1,7 +1,7 @@
 'use server';
 
 import { MongoController } from '@/lib/mongoController';
-import { Database } from '@/lib/types/mongo';
+import { Database, MongoDocument } from '@/lib/types/mongo';
 
 const mongo = new MongoController();
 
@@ -163,4 +163,19 @@ export const addDocument = async (database: string, collection: string, document
 			error: error instanceof Error ? error : new Error('Invalid JSON'),
 		};
 	}
+};
+
+export const updateDocument = async (
+	database: string,
+	collection: string,
+	documentId: string,
+	updatedDocument: MongoDocument,
+) => {
+	const result = await mongo.updateDocument(database, collection, documentId, updatedDocument);
+
+	return {
+		success: result.success,
+		updated: result.updated || false,
+		error: result.error,
+	};
 };
