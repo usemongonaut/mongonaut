@@ -4,6 +4,7 @@ import { githubDarkTheme, githubLightTheme, JsonEditor, JsonEditorProps } from '
 import {
 	CheckIcon,
 	ChevronDownIcon,
+	ClipboardCopy,
 	PenIcon,
 	PlusSquareIcon,
 	TrashIcon,
@@ -22,7 +23,7 @@ export function ClientJsonEditor(props: JsonEditorProps) {
 	return (
 		<JsonEditor
 			theme={jsonTheme}
-			enableClipboard={false}
+			enableClipboard={true}
 			rootName={''}
 			icons={{
 				edit: <PenIcon size={14} />,
@@ -31,7 +32,9 @@ export function ClientJsonEditor(props: JsonEditorProps) {
 				cancel: <XIcon size={14} className="text-red-600" />,
 				ok: <CheckIcon size={14} className="text-green-400" />,
 				chevron: <ChevronDownIcon size={14} />,
+				copy: <ClipboardCopy size={14} />,
 			}}
+			showArrayIndices={true}
 			{...props}
 		/>
 	);
