@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
 	ChevronRightIcon,
 	DatabaseIcon,
@@ -14,7 +14,6 @@ import {
 	TableIcon,
 } from 'lucide-react';
 import type { Document } from 'mongodb';
-import { redirect } from 'next/navigation';
 import {
 	Sidebar,
 	SidebarContent,
@@ -267,6 +266,8 @@ export function CollapsibleDatabaseSidebarItem({
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 }) {
+	const router = useRouter();
+
 	const filteredCollections = useMemo(() => {
 		const searchTerm = search.trim().toLowerCase();
 		return database.collections.filter(
@@ -299,7 +300,7 @@ export function CollapsibleDatabaseSidebarItem({
 						{filteredCollections.map(collection => (
 							<SidebarMenuButton
 								key={collection.name}
-								onClick={() => redirect(`/${database.name}/${collection.name}`)}
+								onClick={() => router.push(`/${database.name}/${collection.name}`)}
 								className="data-[active=true]:bg-transparent cursor-pointer"
 							>
 								<TableIcon />
