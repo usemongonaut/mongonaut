@@ -6,6 +6,7 @@ import React from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import Providers from '@/app/providers';
 import { DatabaseFetcher } from '@/components/custom/database-fetcher';
+import { ReactScan } from '@/components/custom/react-scan';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -29,6 +30,7 @@ interface RootLayoutProps {
 export default async function RootLayout({ children }: Readonly<RootLayoutProps>) {
 	return (
 		<html lang="en" className="w-full h-full" suppressHydrationWarning>
+			<ReactScan />
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full`}>
 				<Providers>
 					<SidebarProvider
