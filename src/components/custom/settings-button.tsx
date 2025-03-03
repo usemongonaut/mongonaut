@@ -29,6 +29,7 @@ export function SettingsButton() {
 			<PopoverTrigger asChild>
 				<Button size="icon" variant="ghost">
 					<SettingsIcon />
+					<span className="sr-only">Settings</span>
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="p-1.5 grid gap-1 w-56">

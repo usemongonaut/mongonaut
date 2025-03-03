@@ -47,6 +47,7 @@ export default function Searchbar(props: Props) {
 					) : (
 						<FilterIcon className={'text-muted-foreground'} />
 					)}
+					<span className="sr-only">Clear search filter</span>
 				</Button>
 				<Input placeholder="Key" value={key || ''} onChange={e => setKey(e.target.value)} />
 			</div>
