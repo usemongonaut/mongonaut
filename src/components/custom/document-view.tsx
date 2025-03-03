@@ -156,6 +156,7 @@ export function DocumentView({ data, isReadonly }: { data: string; isReadonly: b
 						className="text-muted-foreground hover:text-primary cursor-pointer"
 					>
 						<SaveIcon size={16} />
+						<span className="sr-only">Save changes</span>
 					</Button>
 					<Button
 						variant="ghost"
@@ -165,6 +166,7 @@ export function DocumentView({ data, isReadonly }: { data: string; isReadonly: b
 						className="text-muted-foreground hover:text-destructive cursor-pointer"
 					>
 						<TrashIcon size={16} />
+						<span className="sr-only">Delete document</span>
 					</Button>
 				</div>
 			)}
