@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import prettyBytes from 'next/dist/lib/pretty-bytes';
@@ -267,13 +267,14 @@ export function CollapsibleDatabaseSidebarItem({
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 }) {
-	const filteredCollections = database.collections.filter(collection => {
+	const filteredCollections = useMemo(() => {
 		const searchTerm = search.trim().toLowerCase();
-		return (
-			collection.name.toLowerCase().includes(searchTerm) ||
-			database.name.toLowerCase().includes(searchTerm)
+		return database.collections.filter(
+			collection =>
+				collection.name.toLowerCase().includes(searchTerm) ||
+				database.name.toLowerCase().includes(searchTerm),
 		);
-	});
+	}, [database.collections, database.name, search]);
 
 	return (
 		<SidebarMenuItem>
