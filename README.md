@@ -10,7 +10,9 @@
 
 Mongonaut is a lightweight and easy-to-use MongoDB web-service to manage your MongoDB built with [Next.js](https://nextjs.org/).
 
-> 🚧 Work in Progress! Mongonaut is currently Read-Only Mode only. Editing documents will follow with future updates.
+> 🚧 **Work in Progress!** Currently released in an early beta state.
+> 
+> ⚠️ **Warning:** Development versions may contain breaking changes and could be unstable.
 
 ![Screenshot](https://github.com/user-attachments/assets/d36bca71-285e-4df6-a4ea-43531c9dbfde)
 
