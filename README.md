@@ -14,7 +14,7 @@ Mongonaut is a lightweight and easy-to-use MongoDB web-service to manage your Mo
 > 
 > ⚠️ **Warning:** Development versions may contain breaking changes and could be unstable.
 
-![Screenshot](https://github.com/user-attachments/assets/d36bca71-285e-4df6-a4ea-43531c9dbfde)
+<img width="1488" alt="image" src="https://github.com/user-attachments/assets/6915bf94-9b12-42bf-a740-26b4bec16e67" />
 
 ## Installation and Securing
 
