@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/usemongonaut/mongonaut/blob/1ab38bf1d571391c84572749be1e01c3143074e6/public/images/logo.png" width="125" />
+    <img src="https://raw.githubusercontent.com/usemongonaut/mongonaut/1ab38bf1d571391c84572749be1e01c3143074e6/public/images/logo.png" width="125" />
 </p>
 
 <p align="center">
