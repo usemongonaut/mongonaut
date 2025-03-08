@@ -37,12 +37,6 @@ export function SettingsButton() {
 					<Switch checked={theme === 'dark'} onCheckedChange={e => toggleTheme(e)} />
 				</SettingsMenuItem>
 				<SettingsMenuItem icon={InfoIcon} label="About" href="/about" />
-				<SettingsMenuItem
-					icon={HeartIcon}
-					external
-					label="Become a Sponsor"
-					href="https://github.com/"
-				/>
 			</PopoverContent>
 		</Popover>
 	);
