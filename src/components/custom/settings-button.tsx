@@ -1,13 +1,6 @@
 'use client';
 
-import {
-	ExternalLinkIcon,
-	HeartIcon,
-	InfoIcon,
-	LucideIcon,
-	SettingsIcon,
-	SunMoonIcon,
-} from 'lucide-react';
+import { ExternalLinkIcon, InfoIcon, LucideIcon, SettingsIcon, SunMoonIcon } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
