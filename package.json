@@ -1,6 +1,6 @@
 {
 	"name": "mongonaut",
-	"version": "0.0.1-dev.12",
+	"version": "0.0.1-dev.14",
 	"license": "MIT",
 	"scripts": {
 		"dev": "next dev",
