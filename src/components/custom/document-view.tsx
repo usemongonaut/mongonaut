@@ -1,7 +1,7 @@
 'use client';
 
 import { SaveIcon, TrashIcon } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { JsonEditorProps as LibJsonEditorProps, UpdateFunction } from 'json-edit-react';
@@ -92,6 +92,23 @@ export function DocumentView({ data, isReadonly }: { data: string; isReadonly: b
 		const originalJson = JSON.stringify(originalDocument, null, 2);
 		return currentJson !== originalJson;
 	}, [currentDocument, originalDocument]);
+
+	useEffect(() => {
+		const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+			if (hasChanges) {
+				event.preventDefault();
+				return '';
+			}
+		};
+
+		if (hasChanges) {
+			window.addEventListener('beforeunload', handleBeforeUnload);
+		}
+
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
+	}, [hasChanges]);
 
 	const handleDocumentUpdate = useCallback((updateEvent: UpdateEvent) => {
 		if (!updateEvent.path) {
