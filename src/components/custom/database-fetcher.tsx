@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useState, useTransition } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState, useTransition } from 'react';
 import { Document } from 'mongodb';
 import {
 	collectSidebarDatabaseInformation,
@@ -22,6 +22,20 @@ type ActionResult<T> =
 interface DbListData {
 	databases: unknown[];
 	totalSize: number;
+}
+
+interface DatabaseFetcherContextType {
+	reloadData: () => Promise<void>;
+}
+
+const DatabaseFetcherContext = createContext<DatabaseFetcherContextType | null>(null);
+
+export function useDatabaseFetcher() {
+	const context = useContext(DatabaseFetcherContext);
+	if (!context) {
+		throw new Error('useDatabaseFetcher must be used within a DatabaseFetcherProvider');
+	}
+	return context;
 }
 
 export function DatabaseFetcher({ children }: DatabaseFetcherProps) {
@@ -57,48 +71,38 @@ export function DatabaseFetcher({ children }: DatabaseFetcherProps) {
 			} else {
 				setServerInfo(undefined);
 			}
-
-			// @ts-expect-error types are rip - need to clean up
-			const connectionError = getConnectionError(databasesResult, dbListResult, serverInfoResult);
-			setError(connectionError);
-		} catch (err) {
-			setError(err instanceof Error ? err : new Error('Unexpected error occurred'));
-			setDatabases([]);
-			setTotalSize(undefined);
-			setServerInfo(undefined);
+		} catch (e) {
+			setError(e instanceof Error ? e : new Error('Unknown error'));
 		}
 	};
 
+	// Initial data fetch
 	useEffect(() => {
-		startTransition(() => {
-			fetchAllData().finally(() => setInitialLoading(false));
+		fetchAllData().finally(() => {
+			setInitialLoading(false);
 		});
 	}, []);
 
-	useEffect(() => {
-		if (initialLoading) return;
-
-		const intervalId = setInterval(() => {
-			startTransition(() => {
-				void fetchAllData();
-			});
-		}, 60000);
-
-		return () => clearInterval(intervalId);
-	}, [initialLoading]);
+	const reloadData = async () => {
+		startTransition(() => {
+			fetchAllData();
+		});
+	};
 
 	const isLoading = initialLoading || isPending;
 
 	return (
-		<DatabaseContent
-			databases={databases}
-			totalSize={totalSize}
-			serverInfo={serverInfo}
-			error={error}
-			loading={isLoading}
-		>
-			{children}
-		</DatabaseContent>
+		<DatabaseFetcherContext.Provider value={{ reloadData }}>
+			<DatabaseContent
+				databases={databases}
+				totalSize={totalSize}
+				serverInfo={serverInfo}
+				error={error}
+				loading={isLoading}
+			>
+				{children}
+			</DatabaseContent>
+		</DatabaseFetcherContext.Provider>
 	);
 }
 

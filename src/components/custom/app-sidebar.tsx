@@ -9,6 +9,7 @@ import {
 	ChevronRightIcon,
 	DatabaseIcon,
 	MenuIcon,
+	PlusIcon,
 	SearchIcon,
 	SlashIcon,
 	TableIcon,
@@ -40,6 +41,8 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
+import { CreateItemDialog } from '@/components/custom/create-item-dialog';
 
 interface AppSidebarProps {
 	databases: Database[];
@@ -124,6 +127,7 @@ export function AppSidebar({
 }: AppSidebarProps) {
 	const [search, setSearch] = useState('');
 	const [openedTables, setOpenedTables] = useState<string[]>([]);
+	const [isCreateOpen, setCreateOpen] = useState(false);
 
 	useEffect(() => {
 		const saved = localStorage.getItem('openedTables') || '[]';
@@ -179,7 +183,19 @@ export function AppSidebar({
 
 				<SidebarContent className="gap-4 md:gap-2">
 					<SidebarGroup>
-						<SidebarGroupLabel>Databases</SidebarGroupLabel>
+						<SidebarGroupLabel className="flex justify-between items-center">
+							Databases
+							{!readOnly && (
+								<Button
+									variant="ghost"
+									size="icon"
+									className="h-6 w-6"
+									onClick={() => setCreateOpen(true)}
+								>
+									<PlusIcon size={14} />
+								</Button>
+							)}
+						</SidebarGroupLabel>
 						<SidebarGroupContent>
 							<SidebarMenu className="gap-2 md:gap-1">
 								{loading ? (
@@ -251,6 +267,8 @@ export function AppSidebar({
 					</div>
 				</SidebarFooter>
 			</Sidebar>
+
+			<CreateItemDialog open={isCreateOpen} onOpenChange={setCreateOpen} databases={databases} />
 		</>
 	);
 }

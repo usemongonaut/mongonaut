@@ -38,7 +38,9 @@ export const collectSidebarDatabaseInformation = async () => {
 				continue;
 			}
 
-			const collections = await collectionsResult.data.toArray();
+			const collections = (await collectionsResult.data.toArray()).filter(
+				col => col.name !== '__mongonaut_init',
+			);
 
 			const collectionsWithStats = await Promise.all(
 				collections.map(async col => {
@@ -178,4 +180,15 @@ export const updateDocument = async (
 		updated: result.updated || false,
 		error: result.error,
 	};
+};
+
+export const createCollection = async (database: string, collection: string) => {
+	return await mongo.createCollection(database, collection);
+};
+
+export const createDatabase = async (database: string) => {
+	// MongoDB creates a database on first write, so we create a dummy collection
+	const dummyCollection = '__mongonaut_init';
+	// We don't drop the collection, otherwise the DB would be dropped as well if it's empty
+	return await mongo.createCollection(database, dummyCollection);
 };

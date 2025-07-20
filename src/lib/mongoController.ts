@@ -420,4 +420,18 @@ export class MongoController {
 			};
 		}
 	}
+
+	public async createCollection(dbName: string, collectionName: string) {
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error };
+		}
+		try {
+			const db = this.client.db(dbName);
+			await db.createCollection(collectionName);
+			return { success: true };
+		} catch (error) {
+			return { success: false, error };
+		}
+	}
 }
