@@ -105,25 +105,3 @@ export function DatabaseFetcher({ children }: DatabaseFetcherProps) {
 		</DatabaseFetcherContext.Provider>
 	);
 }
-
-function getConnectionError(
-	...results: (
-		| ActionResult<Database[]>
-		| ActionResult<DbListData>
-		| ActionResult<Document | undefined>
-	)[]
-): Error | undefined {
-	for (const result of results) {
-		if (!result.success && result.error) {
-			if (
-				result.error instanceof MongoConnectionError ||
-				result.error.message.includes('ECONNREFUSED') ||
-				result.error.message.includes('timeout') ||
-				result.error.message.includes('Connection error')
-			) {
-				return result.error;
-			}
-		}
-	}
-	return undefined;
-}
