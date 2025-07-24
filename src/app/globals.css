@@ -157,6 +157,24 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: hsl(var(--background));
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: hsl(var(--accent));
+		border-radius: 4px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: hsl(var(--accent-foreground));
+	}
 }
 
 @layer base {
