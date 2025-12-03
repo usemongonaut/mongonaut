@@ -8,7 +8,6 @@ import {
 	listDatabases,
 } from '@/actions/databaseOperation';
 import { DatabaseContent } from '@/components/custom/database-content';
-import { MongoConnectionError } from '@/lib/errors/mongo';
 import { Database } from '@/lib/types/mongo';
 
 interface DatabaseFetcherProps {
@@ -78,9 +77,11 @@ export function DatabaseFetcher({ children }: DatabaseFetcherProps) {
 
 	// Initial data fetch
 	useEffect(() => {
-		fetchAllData().finally(() => {
+		const fetchData = async () => {
+			await fetchAllData();
 			setInitialLoading(false);
-		});
+		};
+		void fetchData();
 	}, []);
 
 	const reloadData = async () => {

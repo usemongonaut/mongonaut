@@ -126,13 +126,11 @@ export function AppSidebar({
 	loading = false,
 }: AppSidebarProps) {
 	const [search, setSearch] = useState('');
-	const [openedTables, setOpenedTables] = useState<string[]>([]);
+	const [openedTables, setOpenedTables] = useState<string[]>(() => {
+		const saved = typeof window !== 'undefined' ? localStorage.getItem('openedTables') : null;
+		return saved ? JSON.parse(saved) : [];
+	});
 	const [isCreateOpen, setCreateOpen] = useState(false);
-
-	useEffect(() => {
-		const saved = localStorage.getItem('openedTables') || '[]';
-		setOpenedTables(JSON.parse(saved));
-	}, []);
 
 	useEffect(() => {
 		localStorage.setItem('openedTables', JSON.stringify(openedTables));
@@ -211,7 +209,7 @@ export function AppSidebar({
 											database={database}
 											search={search}
 											open={isTableOpen(database.name) || search.trim().length > 0}
-											onOpenChange={() => toggleTable(database.name)}
+											onOpenChangeAction={() => toggleTable(database.name)}
 										/>
 									))
 								) : (
@@ -277,12 +275,12 @@ export function CollapsibleDatabaseSidebarItem({
 	database,
 	search,
 	open,
-	onOpenChange,
+	onOpenChangeAction,
 }: {
 	database: Database;
 	search: string;
 	open?: boolean;
-	onOpenChange?: (open: boolean) => void;
+	onOpenChangeAction?: (open: boolean) => void;
 }) {
 	const router = useRouter();
 
@@ -299,7 +297,7 @@ export function CollapsibleDatabaseSidebarItem({
 		<SidebarMenuItem>
 			<Collapsible
 				open={open}
-				onOpenChange={onOpenChange}
+				onOpenChange={onOpenChangeAction}
 				className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
 			>
 				<CollapsibleTrigger asChild>
