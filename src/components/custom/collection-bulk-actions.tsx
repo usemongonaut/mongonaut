@@ -4,7 +4,10 @@ import { DownloadIcon, Trash2Icon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { deleteAllDocuments, getDatabaseCollectionAllDocumentsJson } from '@/actions/databaseOperation';
+import {
+	deleteAllDocuments,
+	getDatabaseCollectionAllDocumentsJson,
+} from '@/actions/databaseOperation';
 import { Button } from '@/components/ui/button';
 import {
 	AlertDialog,
@@ -106,7 +109,8 @@ export function CollectionBulkActions() {
 					<AlertDialogHeader>
 						<AlertDialogTitle>Delete all documents</AlertDialogTitle>
 						<AlertDialogDescription>
-							This will permanently delete every document in this collection. This action cannot be undone.
+							This will permanently delete every document in this collection. This action cannot be
+							undone.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
