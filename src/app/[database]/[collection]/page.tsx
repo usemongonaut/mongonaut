@@ -21,6 +21,7 @@ import { DocumentView } from '@/components/custom/document-view';
 import Searchbar from '@/components/custom/searchbar';
 import { PaginationControls } from '@/components/custom/pagination-controls';
 import { AddDocumentButton } from '@/components/custom/add-document-button';
+import type { Document, WithId } from 'mongodb';
 
 type Props = {
 	params: Promise<{
@@ -113,10 +114,18 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 
 				{!isReadonly && <AddDocumentButton />}
 
-				{content?.documents.length > 0 ? (
-					content.documents.map((doc, index) => (
-						<DocumentView key={index} data={JSON.stringify(doc)} isReadonly={isReadonly} />
-					))
+				{(content?.documents?.length || 0) > 0 ? (
+					(content?.documents as WithId<Document>[]).map(doc => {
+						const rawId = doc._id as unknown;
+						const documentId =
+							rawId && typeof rawId === 'object' && '$oid' in (rawId as Record<string, unknown>)
+								? String((rawId as { $oid: unknown }).$oid)
+								: String(rawId);
+
+						return (
+							<DocumentView key={documentId} data={JSON.stringify(doc)} isReadonly={isReadonly} />
+						);
+					})
 				) : (
 					<div className="flex flex-col items-center justify-center py-10 text-center border rounded-lg">
 						<FilterXIcon className="w-12 h-12 mb-3 text-muted-foreground" />
