@@ -203,6 +203,35 @@ export class MongoController {
 		}
 	}
 
+	public async getAllDocuments(dbName: string, collectionName: string) {
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return {
+				success: false,
+				error: connectResult.error,
+				documents: [],
+			};
+		}
+
+		try {
+			const db = this.client.db(dbName);
+			const collection = db.collection(collectionName);
+			const documents = await collection.find().toArray();
+
+			return {
+				success: true,
+				documents,
+			};
+		} catch (error) {
+			console.error('Error fetching all documents:', error);
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+				documents: [],
+			};
+		}
+	}
+
 	public async searchInCollection(
 		dbName: string,
 		collectionName: string,
@@ -342,6 +371,31 @@ export class MongoController {
 			return {
 				success: false,
 				error: error instanceof Error ? error : new Error('Unknown error'),
+			};
+		}
+	}
+
+	public async deleteAllDocuments(dbName: string, collectionName: string) {
+		const connectResult = await this.connect();
+		if (!connectResult.success) {
+			return { success: false, error: connectResult.error };
+		}
+
+		try {
+			const db = this.client.db(dbName);
+			const collection = db.collection(collectionName);
+			const result = await collection.deleteMany({});
+
+			return {
+				success: true,
+				deletedCount: result.deletedCount || 0,
+			};
+		} catch (error) {
+			this.connected = false;
+			return {
+				success: false,
+				error: error instanceof Error ? error : new Error('Unknown error'),
+				deletedCount: 0,
 			};
 		}
 	}

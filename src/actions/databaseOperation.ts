@@ -115,6 +115,19 @@ export const getDatabaseCollectionContent = async (
 	};
 };
 
+export const getDatabaseCollectionAllDocumentsJson = async (
+	database: string,
+	collection: string,
+) => {
+	const result = await mongo.getAllDocuments(database, collection);
+
+	return {
+		success: result.success,
+		json: result.documents ? JSON.stringify(result.documents, null, 2) : '[]',
+		error: result.error,
+	};
+};
+
 export const searchInCollection = async (
 	database: string,
 	collection: string,
@@ -144,6 +157,16 @@ export const deleteDocument = async (database: string, collection: string, docum
 	return {
 		success: result.success,
 		deleted: result.deleted || false,
+		error: result.error,
+	};
+};
+
+export const deleteAllDocuments = async (database: string, collection: string) => {
+	const result = await mongo.deleteAllDocuments(database, collection);
+
+	return {
+		success: result.success,
+		deletedCount: result.deletedCount || 0,
 		error: result.error,
 	};
 };

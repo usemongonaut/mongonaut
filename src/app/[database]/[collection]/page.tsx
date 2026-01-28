@@ -22,6 +22,7 @@ import Searchbar from '@/components/custom/searchbar';
 import { PaginationControls } from '@/components/custom/pagination-controls';
 import { AddDocumentButton } from '@/components/custom/add-document-button';
 import type { Document, WithId } from 'mongodb';
+import { CollectionBulkActions } from '@/components/custom/collection-bulk-actions';
 
 type Props = {
 	params: Promise<{
@@ -87,7 +88,7 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 
 			<div className="w-full h-full flex flex-col gap-4">
 				{stats && (
-					<div className="w-full flex items-center gap-6 px-4 py-3 bg-muted/30 rounded-lg text-sm">
+					<div className="w-full flex flex-wrap items-center gap-6 px-4 py-3 bg-muted/30 rounded-lg text-sm">
 						<div className="flex items-center gap-2">
 							<DatabaseIcon size={14} className="text-primary" />
 							<span className="text-muted-foreground">Documents:</span>
@@ -107,6 +108,8 @@ const CollectionDetailPage: FC<Props> = async ({ params, searchParams }) => {
 								<span className="font-medium">{prettyBytes(stats.avgObjSize)}</span>
 							</div>
 						)}
+
+						{!isReadonly && <CollectionBulkActions />}
 					</div>
 				)}
 
